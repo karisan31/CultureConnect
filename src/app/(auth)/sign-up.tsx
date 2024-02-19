@@ -3,34 +3,51 @@ import {
   Text,
   TextInput,
   StyleSheet,
+  Alert,
   Image,
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import Button from "../../components/Button";
 import Colors from "../../constants/Colors";
+import { supabase } from "@/config/initSupabase";
+import Spinner from "react-native-loading-spinner-overlay";
 import { Link, Stack } from "expo-router";
 import Constants from "expo-constants";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const SignUpScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [secondName, setSecondName] = useState("");
-  const [bio, setBio] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("jpunia93@outlook.com");
+  const [password, setPassword] = useState("thisisatest");
+  const [firstName, setFirstName] = useState("Test");
+  const [secondName, setSecondName] = useState("Tester");
+  const [bio, setBio] = useState("I am testing this");
+
+  //Sign up with personal details
+  const onSignUpPress = async () => {
+    setLoading(true);
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) Alert.alert("Error signing up", error.message);
+    else Alert.alert("Sign up successful");
+    setLoading(false);
+  };
 
   return (
     <View style={styles.container}>
+      <Spinner visible={loading} />
       <Stack.Screen options={{ title: "Sign up" }} />
-      
       <Text style={styles.label}>First Name</Text>
       <TextInput
         value={firstName}
         onChangeText={setFirstName}
         placeholder="Input your name here..."
         style={styles.input}
-        secureTextEntry
       />
       <Text style={styles.label}>Second Name</Text>
       <TextInput
@@ -38,15 +55,13 @@ const SignUpScreen = () => {
         onChangeText={setSecondName}
         placeholder="Input your surname here..."
         style={styles.input}
-        secureTextEntry
       />
       <Text style={styles.label}>Bio</Text>
       <TextInput
         value={bio}
         onChangeText={setBio}
-        placeholder="Input your surname here..."
+        placeholder="Input your bio here..."
         style={styles.input}
-        secureTextEntry
       />
       <Text style={styles.label}>Email</Text>
       <TextInput
@@ -65,7 +80,7 @@ const SignUpScreen = () => {
         secureTextEntry
       />
 
-      <Button text="Create account" />
+      <Button onPress={onSignUpPress} text="Create account" />
       <Link href="/sign-in" style={styles.textButton}>
         Sign in
       </Link>
