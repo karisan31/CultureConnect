@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
@@ -6,6 +6,7 @@ import { Pressable } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/components/useColorScheme";
 import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
+import SignInScreen from "../(auth)/sign-in";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -15,10 +16,15 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
+
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
-  return (
+  const [loggedIn, setLoggedIn] = useState(false)
+
+  return (<>
+  {loggedIn ? (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
@@ -71,5 +77,7 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+  ) : <SignInScreen/>}
+    </>
   );
 }
