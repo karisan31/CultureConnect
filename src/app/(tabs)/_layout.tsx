@@ -77,7 +77,7 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-  ) : <SignInScreen/>}
+  ) : <SignInScreen />}
     </>
   );
 }

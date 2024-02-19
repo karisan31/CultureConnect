@@ -23,25 +23,7 @@ const SignUpScreen = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Sign up" }} />
-      <TouchableOpacity>
-        <Image
-          source={{ uri }}
-          style={[
-            styles.Image,
-            aviOnly && { height: 35, width: 35, borderWidth: 0 },
-            imgStyle,
-          ]}
-        />
-        {!aviOnly && (
-          <TouchableOpacity style={styles.editButton} onPress={onButtonPress}>
-            <MaterialCommunityIcons
-              name="camera-outline"
-              size={30}
-              color={"orange"}
-            />
-          </TouchableOpacity>
-        )}
-      </TouchableOpacity>
+      
       <Text style={styles.label}>First Name</Text>
       <TextInput
         value={firstName}
