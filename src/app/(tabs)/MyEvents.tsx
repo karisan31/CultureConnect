@@ -3,12 +3,12 @@ import { StyleSheet } from 'react-native';
 import EditScreenInfo from '@/src/components/EditScreenInfo';
 import { Text, View } from '@/src/components/Themed';
 
-export default function TabTwoScreen() {
+export default function TabThreeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MyEvents</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
+      <EditScreenInfo path="app/(tabs)/MyEvents.tsx" />
     </View>
   );
 }
