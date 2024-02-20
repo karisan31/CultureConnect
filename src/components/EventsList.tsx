@@ -1,20 +1,40 @@
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { StyleSheet, Text, View, Image, Button, useColorScheme } from "react-native";
 import Colors from "../constants/Colors";
-import { supabase } from "../lib/supabase";
 import { useEffect, useState } from "react";
+import { fetchEvents } from "../Utils/api";
+import Loading from "./Loading";
 
-async function fetchEvents() {
-  const { data, error } = await supabase.from("events").select("*");
-  console.log(data);
-  console.log(error);
-}
 
 export default function EventsList() {
   const [eventsData, setEventsData] = useState({});
-  fetchEvents();
+  const [err, setErr] = useState(null);
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsLoading(true)
+    setErr(null)
+    fetchEvents().then(({ data, error }) => {
+      if (data) {
+        setIsLoading(false)
+        setEventsData(data);
+      } else {
+        setErr(error);
+      }
+    });
+  }, []);
+
+  const theme = useColorScheme();
+
+  const textColor = [
+    theme === 'dark' ? {color:Colors.dark.text} : {color:Colors.light.text}
+  ]
+
+
   return (
     <View>
-      <Text>EventsList</Text>
+      {isLoading ? (<Loading/>) : <Text style={textColor} > the data</Text> } 
     </View>
+    
+    
   );
 }
