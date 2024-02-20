@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import Button from "../../components/Button";
 import Colors from "../../constants/Colors";
-import { supabase } from "@/config/initSupabase";
+import { supabase } from "../../../config/initSupabase";
 import Spinner from "react-native-loading-spinner-overlay";
 import { Link, Stack } from "expo-router";
 import Constants from "expo-constants";
@@ -28,9 +28,16 @@ const SignUpScreen = () => {
   const onSignUpPress = async () => {
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          first_name: firstName,
+          surname: secondName,
+          bio: bio,
+        },
+      },
     });
 
     if (error) Alert.alert("Error signing up", error.message);

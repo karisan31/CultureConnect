@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import Button from "../../components/Button";
 import Colors from "../../constants/Colors";
 import Spinner from "react-native-loading-spinner-overlay";
-import { supabase } from "@/config/initSupabase";
+import { supabase } from "../../../config/initSupabase";
 import { Link, Stack } from "expo-router";
 
 const SignInScreen = () => {
