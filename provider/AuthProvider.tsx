@@ -7,8 +7,6 @@ import React, {
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../config/initSupabase";
 
-//15:57 https://www.youtube.com/watch?v=am6w5zEDk_g&ab_channel=SimonGrimm
-
 type AuthProps = {
   user: User | null;
   session: Session | null;
