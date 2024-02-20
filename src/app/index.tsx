@@ -67,7 +67,7 @@ const Login = () => {
       <Spinner visible={loading} />
 
       <Text style={styles.header}>Culture Connect</Text>
-
+      <Text style={styles.label}>Email</Text>
       <TextInput
         autoCapitalize="none"
         placeholder="Your email here..."
