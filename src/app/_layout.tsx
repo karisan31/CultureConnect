@@ -9,10 +9,10 @@ const InitialLayout = () => {
 
   useEffect(() => {
     if (!initialized) return;
-    const inAuthGroup = segments[0] === "(auth)";
+    const inAuthGroup = segments[0] === "(tabs)";
 
     if (session && !inAuthGroup) {
-      router.replace("/Homepage");
+      router.replace("/Index");
     } else if (!session) {
       router.replace("/");
     }
