@@ -1,16 +1,28 @@
-import { StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  useColorScheme,
+} from "react-native";
+import EventsList from "@/src/components/EventsList";
+import Colors from "@/src/constants/Colors";
 
-import EditScreenInfo from '@/src/components/EditScreenInfo';
-import { Text, View } from '@/src/components/Themed';
-import Homepage from '@/src/components/Homepage';
+export default function Homepage() {
+  const theme = useColorScheme();
 
-export default function TabOneScreen() {
+  const textColor = [
+    theme === "dark"
+      ? { color: Colors.dark.text }
+      : { color: Colors.light.text },
+  ];
   return (
     <View style={styles.container}>
-      <Homepage/>
-      <Text style={styles.title}>Home</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Text style={textColor}> CultureConnect </Text>
+      <Button title="List"></Button>
+      <Button title="Map"></Button>
+      <EventsList />
     </View>
   );
 }
@@ -18,16 +30,16 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   separator: {
     marginVertical: 30,
     height: 1,
-    width: '80%',
+    width: "80%",
   },
 });
