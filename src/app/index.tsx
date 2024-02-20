@@ -18,9 +18,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [firstName, setFirstName] = useState("Test");
-  const [secondName, setSecondName] = useState("Tester");
-  const [bio, setBio] = useState("I am testing this");
+  const [firstName, setFirstName] = useState("");
+  const [secondName, setSecondName] = useState("");
+  const [bio, setBio] = useState("");
   const [signIn, setSignIn] = useState(true);
 
   const onSignInPress = async () => {
