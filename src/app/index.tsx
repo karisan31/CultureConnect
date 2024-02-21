@@ -6,12 +6,15 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Image,
+  ScrollView,
 } from "react-native";
 import { useState } from "react";
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -22,6 +25,7 @@ const Login = () => {
   const [secondName, setSecondName] = useState("");
   const [bio, setBio] = useState("");
   const [signIn, setSignIn] = useState(true);
+  const [image, setImage] = useState<string | null>(null);
 
   const onSignInPress = async () => {
     setLoading(true);
@@ -62,8 +66,21 @@ const Login = () => {
     setLoading(false);
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   return signIn ? (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Spinner visible={loading} />
 
       <Text style={styles.header}>Culture Connect</Text>
@@ -93,15 +110,22 @@ const Login = () => {
       <TouchableOpacity onPress={onSignInPress} style={styles.button}>
         <Text style={{ color: "#fff" }}>Sign in</Text>
       </TouchableOpacity>
-      <Button
-        onPress={onCreateAccount}
-        title="Create Account"
-        style={{ color: "#fff", backgroundColor: "#151515" }}
-      ></Button>
-    </View>
+      <Button onPress={onCreateAccount} title="Create Account"></Button>
+    </ScrollView>
   ) : (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Spinner visible={loading} />
+      <Image
+        source={{
+          uri: image
+            ? image
+            : require("../../assets/images/defaultProfile.png"),
+        }}
+        style={{ width: 140, height: 140, alignSelf: "center" }}
+      />
+      <Text onPress={pickImage} style={styles.imageUploadButton}>
+        Upload Profile Photo
+      </Text>
       <Text style={styles.label}>First Name</Text>
       <TextInput
         value={firstName}
@@ -151,7 +175,7 @@ const Login = () => {
         <Text style={{ color: "#fff" }}>Sign Up</Text>
       </TouchableOpacity>
       <Button onPress={onCreateAccount} title="Login"></Button>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -161,7 +185,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 200,
+    paddingBottom: 100,
+    paddingTop: 90,
     padding: 20,
     backgroundColor: "#151515",
   },
@@ -187,6 +212,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#2b825b",
     padding: 12,
     borderRadius: 4,
+  },
+  imageUploadButton: {
+    margin: 10,
+    color: "white",
+    alignSelf: "center",
+    fontWeight: "bold",
   },
 });
 
