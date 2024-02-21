@@ -1,6 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Button } from "react-native";
 
 import { Text, View } from "@/src/components/Themed";
+import { Link } from "expo-router";
 
 export default function TabThreeScreen() {
   return (
@@ -11,6 +12,9 @@ export default function TabThreeScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
+      <Link href={"/PostEvent"}>
+        <Text>Host an event!</Text>
+      </Link>
     </View>
   );
 }
