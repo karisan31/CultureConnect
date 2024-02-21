@@ -1,12 +1,5 @@
-import { Text, useColorScheme } from "react-native";
-import Colors from "../constants/Colors";
+import { Text, View } from "@/src/components/Themed";
 
 export default function Loading() {
-  const theme = useColorScheme();
-  const textColor = [
-    theme === "dark"
-      ? { color: Colors.dark.text }
-      : { color: Colors.light.text },
-  ];
-  return <Text style={textColor}>Loading ...</Text>;
+  return <Text>Loading ...</Text>;
 }
