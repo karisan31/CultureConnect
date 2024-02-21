@@ -1,5 +1,4 @@
-import { Text, useColorScheme } from "react-native";
-import Colors from "../constants/Colors";
+import { Text, View } from "@/src/components/Themed";
 
 type EventProps = {
   date: string;
@@ -11,11 +10,5 @@ type EventProps = {
 
 export default function EventCard(props: EventProps) {
   console.log(props);
-  const theme = useColorScheme();
-  const textColor = [
-    theme === "dark"
-      ? { color: Colors.dark.text }
-      : { color: Colors.light.text },
-  ];
-  return <Text style={textColor}>This is an Event Card!</Text>;
+  return <Text>This is an Event Card!</Text>;
 }

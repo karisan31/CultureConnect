@@ -1,6 +1,12 @@
 import { AuthProvider, useAuth } from "@/provider/AuthProvider";
 import { Slot, Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useColorScheme } from "react-native";
 
 const InitialLayout = () => {
   const { session, initialized } = useAuth();
@@ -22,10 +28,14 @@ const InitialLayout = () => {
 };
 
 const RootLayout = () => {
+  const colorScheme = useColorScheme();
+
   return (
-    <AuthProvider>
-      <InitialLayout />
-    </AuthProvider>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <AuthProvider>
+        <InitialLayout />
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

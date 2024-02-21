@@ -1,25 +1,11 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Button,
-  useColorScheme,
-} from "react-native";
+import { StyleSheet, Image, Button } from "react-native";
+import { Text, View } from "@/src/components/Themed";
 import EventsList from "@/src/components/EventsList";
-import Colors from "@/src/constants/Colors";
 
 export default function Homepage() {
-  const theme = useColorScheme();
-
-  const textColor = [
-    theme === "dark"
-      ? { color: Colors.dark.text }
-      : { color: Colors.light.text },
-  ];
   return (
     <View style={styles.container}>
-      <Text style={textColor}> CultureConnect </Text>
+      <Text style={styles.title}> CultureConnect </Text>
       <Button title="List"></Button>
       <Button title="Map"></Button>
       <EventsList />
