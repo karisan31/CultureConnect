@@ -25,7 +25,7 @@ const Login = () => {
   const [secondName, setSecondName] = useState("");
   const [bio, setBio] = useState("");
   const [signIn, setSignIn] = useState(true);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
 
   const onSignInPress = async () => {
     setLoading(true);
@@ -116,11 +116,11 @@ const Login = () => {
     <ScrollView style={styles.container}>
       <Spinner visible={loading} />
       <Image
-        source={{
-          uri: image
-            ? image
-            : require("../../assets/images/defaultProfile.png"),
-        }}
+        source={
+          image
+            ? { uri: image }
+            : require("../../assets/images/defaultProfile.png")
+        }
         style={{ width: 140, height: 140, alignSelf: "center" }}
       />
       <Text onPress={pickImage} style={styles.imageUploadButton}>
