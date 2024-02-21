@@ -7,6 +7,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useColorScheme } from "react-native";
+import { PaperProvider } from "react-native-paper";
 
 const InitialLayout = () => {
   const { session, initialized } = useAuth();
@@ -31,11 +32,13 @@ const RootLayout = () => {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <InitialLayout />
-      </AuthProvider>
-    </ThemeProvider>
+    <PaperProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <AuthProvider>
+          <InitialLayout />
+        </AuthProvider>
+      </ThemeProvider>
+    </PaperProvider>
   );
 };
 
