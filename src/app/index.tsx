@@ -25,7 +25,7 @@ const Login = () => {
   const [secondName, setSecondName] = useState("");
   const [bio, setBio] = useState("");
   const [signIn, setSignIn] = useState(true);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState(null);
 
   const onSignInPress = async () => {
     setLoading(true);
