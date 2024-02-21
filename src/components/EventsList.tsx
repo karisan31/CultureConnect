@@ -43,26 +43,10 @@ export default function EventsList() {
       {isLoading ? (
         <Loading />
       ) : (
-        <View>
-          {eventsData.map((event) => {
-            console.log(event);
-            return (
-              <EventCard
-                key={event.event_id}
-                date={event.date}
-                title={event.title}
-                description={event.description}
-                attendees={event.max_attendees}
-                location={event.location}
-                image={event.image}
-              />
-            );
-          })}
-          {/* <FlatList
-            data={eventsData}
-            renderItem={({ item }) => <EventCard event={item} />}
-          /> */}
-        </View>
+        <FlatList
+          data={eventsData}
+          renderItem={({ item }) => <EventCard event={item} />}
+        />
       )}
     </View>
   );

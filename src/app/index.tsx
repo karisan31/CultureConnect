@@ -93,11 +93,7 @@ const Login = () => {
       <TouchableOpacity onPress={onSignInPress} style={styles.button}>
         <Text style={{ color: "#fff" }}>Sign in</Text>
       </TouchableOpacity>
-      <Button
-        onPress={onCreateAccount}
-        title="Create Account"
-        style={{ color: "#fff", backgroundColor: "#151515" }}
-      ></Button>
+      <Button onPress={onCreateAccount} title="Create Account"></Button>
     </View>
   ) : (
     <View style={styles.container}>
