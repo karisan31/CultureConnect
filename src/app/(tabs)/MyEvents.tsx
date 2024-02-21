@@ -1,13 +1,9 @@
 import { StyleSheet, Button } from "react-native";
 
 import { Text, View } from "@/src/components/Themed";
-import { useRouter } from "expo-router";
+import { Link } from "expo-router";
 
 export default function TabThreeScreen() {
-  const router = useRouter();
-  const goToPostForm = () => {
-    router.replace("/(tabs)/other/PostEvent")
-  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MyEvents</Text>
@@ -16,7 +12,9 @@ export default function TabThreeScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Button title="Add Event" onPress={goToPostForm}></Button>
+      <Link href={"/PostEvent"}>
+        <Text>Host an event!</Text>
+      </Link>
     </View>
   );
 }

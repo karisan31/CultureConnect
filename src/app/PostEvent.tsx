@@ -1,19 +1,13 @@
-import {
-  Alert,
-  View,
-  Button,
-  TextInput,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
 import { useState } from "react";
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Text, View } from "../components/Themed";
+import { StyleSheet, ScrollView } from "react-native";
+import { useForm } from "react-hook-form";
+import { Button } from "react-native-paper";
 
-const PostEvent = async () => {
+export default function PostEvent() {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
@@ -23,20 +17,20 @@ const PostEvent = async () => {
   const [hostId, setHostId] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { data, error } = await supabase
+  supabase
     .from("events")
     .insert([{ title: title, location: location, date: date, host_id: hostId }])
     .select();
 
   return (
     <View style={styles.container}>
-        <Spinner visible={loading}/>
+      <Spinner visible={loading} />
 
-        <Text style={styles.header}>Culture Connect</Text>
-        
+      <Text style={styles.header}>Host an Event!</Text>
+      
     </View>
-  )
-};
+  );
+}
 
 const styles = StyleSheet.create({
   label: {
@@ -72,5 +66,3 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
 });
-
-export default PostEvent;
