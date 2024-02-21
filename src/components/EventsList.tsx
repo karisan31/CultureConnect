@@ -45,6 +45,7 @@ export default function EventsList() {
       ) : (
         <View>
           {eventsData.map((event) => {
+            console.log(event);
             return (
               <EventCard
                 key={event.event_id}
@@ -53,6 +54,7 @@ export default function EventsList() {
                 description={event.description}
                 attendees={event.max_attendees}
                 location={event.location}
+                image={event.image}
               />
             );
           })}
