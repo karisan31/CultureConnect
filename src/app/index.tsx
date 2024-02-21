@@ -121,7 +121,7 @@ const Login = () => {
             ? { uri: image }
             : require("../../assets/images/defaultProfile.png")
         }
-        style={{ width: 140, height: 140, alignSelf: "center" }}
+        style={styles.profileImage}
       />
       <Text onPress={pickImage} style={styles.imageUploadButton}>
         Upload Profile Photo
@@ -218,6 +218,12 @@ const styles = StyleSheet.create({
     color: "white",
     alignSelf: "center",
     fontWeight: "bold",
+  },
+  profileImage: {
+    width: 140,
+    height: 140,
+    alignSelf: "center",
+    borderRadius: 85,
   },
 });
 
