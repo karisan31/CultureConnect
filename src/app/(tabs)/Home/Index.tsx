@@ -6,9 +6,13 @@ export default function Homepage() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}> CultureConnect </Text>
-      <Button title="List"></Button>
-      <Button title="Map"></Button>
-      <EventsList />
+      <View style={styles.buttonsContainer}>
+        <Button title="List"></Button>
+        <Button title="Map"></Button>
+      </View>
+      <View style={styles.container}>
+        <EventsList />
+      </View>
     </View>
   );
 }
@@ -22,10 +26,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    marginTop: 10,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  buttonsContainer: {
+    flexDirection: "row",
   },
 });

@@ -9,6 +9,7 @@ export const defaultPartyImage =
 
 type EventProps = {
   event: {
+    id: number;
     date: string;
     title: string;
     description: string | null;
@@ -19,12 +20,23 @@ type EventProps = {
 };
 
 export default function EventCard({ event }: EventProps) {
+  const eventDate = new Date(event.date);
+
+  const readableDate = eventDate.toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+
   return (
     <Card>
       <Card.Content>
         <Text variant="titleLarge">{event.title}</Text>
         <Text variant="bodyMedium">{event.description}</Text>
-        <Text variant="bodyMedium">{event.date}</Text>
+        <Text variant="bodyMedium">{readableDate}</Text>
         <Text variant="bodyMedium">Max Attendees: {event.attendees}</Text>
       </Card.Content>
       <Card.Cover
@@ -34,7 +46,7 @@ export default function EventCard({ event }: EventProps) {
       />
       <Card.Actions>
         <Button>
-          <Link href={"/EventDetails"}>More Info</Link>
+          <Link href={`/(tabs)/Home/${event.id}`}>More Info</Link>
         </Button>
 
         <Button>Going!</Button>

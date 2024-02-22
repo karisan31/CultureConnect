@@ -1,9 +1,13 @@
 import { Text, View } from "@/src/components/Themed";
+import { useLocalSearchParams, Stack } from "expo-router";
 import { StyleSheet } from "react-native";
 
 export default function EventDetails() {
+  const { event_id } = useLocalSearchParams();
+
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ title: "Details" }} />
       <Text>event details</Text>
     </View>
   );
