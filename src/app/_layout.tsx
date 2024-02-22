@@ -19,7 +19,7 @@ const InitialLayout = () => {
     const inAuthGroup = segments[0] === "(tabs)";
 
     if (session && !inAuthGroup) {
-      router.replace("/Index");
+      router.replace("/Home/Index");
     } else if (!session) {
       router.replace("/");
     }
