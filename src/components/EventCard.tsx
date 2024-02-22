@@ -9,7 +9,7 @@ export const defaultPartyImage =
 
 type EventProps = {
   event: {
-    id: number;
+    event_id: number;
     date: string;
     title: string;
     description: string | null;
@@ -30,7 +30,6 @@ export default function EventCard({ event }: EventProps) {
     minute: "numeric",
     hour12: true,
   });
-
   return (
     <Card>
       <Card.Content>
@@ -46,7 +45,7 @@ export default function EventCard({ event }: EventProps) {
       />
       <Card.Actions>
         <Button>
-          <Link href={`/(tabs)/Home/${event.id}`}>More Info</Link>
+          <Link href={`/(tabs)/Home/${event.event_id}`}>More Info</Link>
         </Button>
 
         <Button>Going!</Button>
