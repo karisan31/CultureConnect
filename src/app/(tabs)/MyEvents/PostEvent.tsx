@@ -2,7 +2,13 @@ import { useCallback, useState } from "react";
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
-import { StyleSheet, ScrollView, Image, TouchableOpacity, Alert} from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import {
   DatePickerInput,
@@ -18,10 +24,10 @@ import * as ImagePicker from "expo-image-picker";
 export default function PostEvent() {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
-  const [locationObject, setLocationObject]= useState({
-    "latitude": "-29.2434067",
-    "longitude": "-51.1985995"
-  })
+  const [locationObject, setLocationObject] = useState({
+    latitude: "-29.2434067",
+    longitude: "-51.1985995",
+  });
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [maxAttendees, setMaxAttendees] = useState("");
   const [description, setDescription] = useState("");
@@ -30,35 +36,33 @@ export default function PostEvent() {
   const [loading, setLoading] = useState(false);
   const [inputDate, setInputDate] = useState<Date | undefined>(undefined);
   const [visible, setVisible] = useState<boolean>(false);
-  const [timeHours, setTimeHours] = useState<number>(12)
-  const [timeMinutes, setTimeMinutes] = useState<number>(15)
-  const [file, setFile] = useState(null); 
-  const [error, setError] = useState(null); 
-
-
+  const [timeHours, setTimeHours] = useState<number>(12);
+  const [timeMinutes, setTimeMinutes] = useState<number>(15);
+  const [file, setFile] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = () => {
-
-     supabase.auth.getUser().then((user)=>{
-      setHostId(user.data.user?.id)
+    supabase.auth.getUser().then((user) => {
+      setHostId(user.data.user?.id);
       date?.setHours(timeHours);
       date?.setMinutes(date.getMinutes() + timeMinutes);
-      console.log(typeof user.data.user?.id, "<---")
-    })
-   
+      console.log(typeof user.data.user?.id, "<---");
+    });
 
-    console.log(title)
-    console.log(location)
-    console.log(date)
-
+    console.log(title);
+    console.log(location);
+    console.log(date);
 
     supabase
       .from("events")
-      .insert([{ title: title, location: locationObject, date: date, host_id: hostId }])
-      .select().then((event)=>{
-        console.log(event)
-      })
-  }
+      .insert([
+        { title: title, location: locationObject, date: date, host_id: hostId },
+      ])
+      .select()
+      .then((event) => {
+        console.log(event);
+      });
+  };
 
   const onDismiss = useCallback(() => {
     setVisible(false);
@@ -68,9 +72,9 @@ export default function PostEvent() {
     ({ hours, minutes }: { hours: number; minutes: number }) => {
       setVisible(false);
       setTimeHours(hours);
-      if(minutes<1){
-        setTimeMinutes(0)
-      } else{
+      if (minutes < 1) {
+        setTimeMinutes(0);
+      } else {
         setTimeMinutes(minutes);
       }
       console.log({ hours, minutes });
@@ -78,47 +82,45 @@ export default function PostEvent() {
     [setVisible]
   );
 
-  const onDateChange = useCallback((dateData: Date | undefined) => {
-    setInputDate(dateData);
-    setDate(dateData);
-  }, [setInputDate, setDate]);
+  const onDateChange = useCallback(
+    (dateData: Date | undefined) => {
+      setInputDate(dateData);
+      setDate(dateData);
+    },
+    [setInputDate, setDate]
+  );
 
-  const pickImage = async () => { 
-    const { status } = await ImagePicker. 
-        requestMediaLibraryPermissionsAsync(); 
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (status !== "granted") { 
+    if (status !== "granted") {
+      // If permission is denied, show an alert
+      Alert.alert(
+        "Permission Denied",
+        `Sorry, we need camera  
+            roll permission to upload images.`
+      );
+    } else {
+      // Launch the image library and get
+      // the selected image
+      const result = await ImagePicker.launchImageLibraryAsync();
 
-        // If permission is denied, show an alert 
-        Alert.alert( 
-            "Permission Denied", 
-            `Sorry, we need camera  
-             roll permission to upload images.` 
-        ); 
-    } else { 
+      if (!result.canceled) {
+        // If an image is selected (not cancelled),
+        // update the file state variable
+        setFile(result.assets[0].uri);
 
-        // Launch the image library and get 
-        // the selected image 
-        const result = 
-            await ImagePicker.launchImageLibraryAsync(); 
-
-        if (!result.canceled) { 
-
-            // If an image is selected (not cancelled),  
-            // update the file state variable 
-            setFile(result.uri); 
-
-            // Clear any previous errors 
-            setError(null); 
-        } 
-    } 
-}; 
+        // Clear any previous errors
+        setError(null);
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Spinner visible={loading} />
 
-      <Text style={styles.header}>Host an Event!</Text>
+      <Text style={[styles.header, { margin: "5%" }]}>Host an Event!</Text>
 
       <Text style={styles.label}>Enter title</Text>
       <TextInput
@@ -142,8 +144,6 @@ export default function PostEvent() {
           alignItems: "center",
           maxHeight: "10%",
           backgroundColor: "transparent",
-          
-          
         }}
       >
         <DatePickerInput
@@ -172,7 +172,6 @@ export default function PostEvent() {
           uppercase={false}
           mode="outlined"
           style={{ backgroundColor: "white", borderRadius: 10 }}
-          
         >
           Pick time
         </Button>
@@ -183,37 +182,35 @@ export default function PostEvent() {
           hours={12}
           minutes={14}
         />
-        <Text>{timeHours}:{timeMinutes === 0 ? '00' : timeMinutes}</Text>
+        <Text>
+          {timeHours}:{timeMinutes === 0 ? "00" : timeMinutes}
+        </Text>
       </View>
-      <Button children="Submit" mode="outlined" style={{ backgroundColor: "white" }} onPress={handleSubmit}></Button>
+      <View style={styles.container}>
+        {/* Button to choose an image */}
+        <TouchableOpacity style={styles.button} onPress={pickImage}>
+          <Text style={styles.buttonText}>Choose Image</Text>
+        </TouchableOpacity>
 
-      <View style={styles.container}> 
-            <Text style={styles.header}> 
-                Add Image: 
-            </Text> 
-  
-            {/* Button to choose an image */} 
-            <TouchableOpacity style={styles.button} 
-                onPress={pickImage}> 
-                <Text style={styles.buttonText}> 
-                    Choose Image 
-                </Text> 
-            </TouchableOpacity> 
-  
-            {/* Conditionally render the image  
-            or error message */} 
-            {file ? ( 
-                // Display the selected image 
-                <View style={styles.imageContainer}> 
-                    <Image source={{ uri: file }} 
-                        style={styles.image} /> 
-                </View> 
-            ) : ( 
-                // Display an error message if there's  
-                // an error or no image selected 
-                <Text style={styles.errorText}>{error}</Text> 
-            )} 
-        </View> 
+        {/* Conditionally render the image  
+            or error message */}
+        {file ? (
+          // Display the selected image
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: file }} style={styles.image} />
+          </View>
+        ) : (
+          // Display an error message if there's
+          // an error or no image selected
+          <Text style={styles.errorText}>{error}</Text>
+        )}
+      </View>
+      <Button
+        children="Submit"
+        mode="outlined"
+        style={{ backgroundColor: "white" }}
+        onPress={handleSubmit}
+      ></Button>
     </View>
   );
 }
@@ -250,29 +247,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#2b825b",
     padding: 12,
     borderRadius: 4,
-  }
-  , 
-    buttonText: { 
-        color: "#FFFFFF", 
-        fontSize: 16, 
-        fontWeight: "bold", 
-    }, 
-    imageContainer: { 
-        borderRadius: 8, 
-        marginBottom: 16, 
-        shadowColor: "#000000", 
-        shadowOffset: { width: 0, height: 2 }, 
-        shadowOpacity: 0.4, 
-        shadowRadius: 4, 
-        elevation: 5, 
-    }, 
-    image: { 
-        width: 200, 
-        height: 200, 
-        borderRadius: 8, 
-    }, 
-    errorText: { 
-        color: "red", 
-        marginTop: 16, 
-    }, 
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  imageContainer: {
+    borderRadius: 8,
+    marginBottom: 16,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 8,
+  },
+  errorText: {
+    color: "red",
+    marginTop: 16,
+  },
 });
