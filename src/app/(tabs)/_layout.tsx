@@ -55,6 +55,7 @@ export default function TabLayout() {
         name="MyEvents"
         options={{
           title: "MyEvents",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="event" size={24} color={color} />
           ),

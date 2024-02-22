@@ -12,7 +12,7 @@ export default function TabThreeScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Link href={"/PostEvent"}>
+      <Link href={"/MyEvents/PostEvent"}>
         <Text>Host an event!</Text>
       </Link>
     </View>
