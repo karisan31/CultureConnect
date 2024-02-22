@@ -57,6 +57,7 @@ const Login = () => {
           first_name: firstName,
           second_name: secondName,
           bio: bio,
+          avatar_url: image,
         },
       },
     });
@@ -71,7 +72,7 @@ const Login = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.1,
     });
 
     if (!result.canceled) {
