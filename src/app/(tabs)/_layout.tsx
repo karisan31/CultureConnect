@@ -41,6 +41,7 @@ export default function TabLayout() {
         name="Messages"
         options={{
           title: "Messages",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="message-text"
@@ -64,6 +65,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="UserProfile"
         options={{
+          headerShown: false,
           title: "My Profile",
           tabBarIcon: ({ color }) => (
             <FontAwesome name="user" size={24} color={color} />

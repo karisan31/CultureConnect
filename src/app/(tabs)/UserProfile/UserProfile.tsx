@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import { Text, View } from "@/src/components/Themed";
+import { Link } from "expo-router";
 
 export default function TabFourScreen() {
   return (
@@ -11,6 +12,9 @@ export default function TabFourScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
+      <Link href={"/UserProfile/EditProfile"}>
+        <Text>Edit Profile</Text>
+      </Link>
     </View>
   );
 }
