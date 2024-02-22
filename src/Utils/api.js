@@ -6,6 +6,7 @@ export const fetchEvents = async () => {
   return { data, error };
 };
 
+
 export const fetchUserid = async () => {
   const {
     data: {
@@ -61,4 +62,12 @@ export const setupSubscription = async (callback) => {
   }
 
   return chatsWatcher;
+
+export const fetchEventByID = async (event_id) => {
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("event_id", event_id);
+  return { data, error };
+
 };
