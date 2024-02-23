@@ -7,6 +7,7 @@ import { supabase } from "@/config/initSupabase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Loading from "@/src/components/Loading";
+import RemoteImage from "@/src/components/RemoteImage";
 
 interface ProfileData {
   avatar_url: string;
@@ -40,7 +41,7 @@ export default function ProfileDataScreen() {
           }
 
           if (data) {
-            console.log(data);
+            // console.log(data);
             setProfileData(data);
             setIsLoading(false);
           }
@@ -73,18 +74,15 @@ export default function ProfileDataScreen() {
         source={require("../../../../assets/images/profileCover.png")}
         style={styles.coverImage}
       />
-      {/* <Image
-        source={
-          profileData?.avatar_url
-            ? { uri: profileData.avatar_url }
-            : require("../../../../assets/images/defaultProfile.png")
-        }
-        style={styles.profileImage}
-      /> */}
-      <Image
-        source={require("../../../../assets/images/defaultProfile.png")}
+      <RemoteImage
+        path={profileData?.avatar_url}
+        fallback={require("../../../../assets/images/defaultProfile.png")}
         style={styles.profileImage}
       />
+      {/* <Image
+        source={require("../../../../assets/images/defaultProfile.png")}
+        style={styles.profileImage}
+      /> */}
       <Text style={styles.name}>
         {profileData?.first_name} {profileData?.second_name}
       </Text>
