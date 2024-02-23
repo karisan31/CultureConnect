@@ -1,6 +1,7 @@
 import { StyleSheet, Image, Button } from "react-native";
 import { Text, View } from "@/src/components/Themed";
 import EventsList from "@/src/components/EventsList";
+import { Link } from "expo-router";
 
 export default function Homepage() {
   return (
@@ -8,7 +9,7 @@ export default function Homepage() {
       <Text style={styles.title}> CultureConnect </Text>
       <View style={styles.buttonsContainer}>
         <Button title="List"></Button>
-        <Button title="Map"></Button>
+        <Link href={"/(tabs)/Home/Map"}><Text>Map</Text></Link>
       </View>
       <View style={styles.container}>
         <EventsList />
