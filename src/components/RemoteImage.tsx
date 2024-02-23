@@ -1,22 +1,22 @@
-import { Image } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import React, { ComponentProps, useEffect, useMemo, useState } from "react";
 import { supabase } from "../../config/initSupabase";
 
 type RemoteImageProps = {
   path?: string | null;
-  fallback: string;
+  fallback: any;
 } & Omit<ComponentProps<typeof Image>, "source">;
 
 const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!path) return;
     (async () => {
       setImage("");
       const { data, error } = await supabase.storage
-        .from("event_images")
-        .download(path);
+        .from("avatars")
+        .download(path!);
 
       if (error) {
         console.log(error, "<---error");
@@ -32,10 +32,22 @@ const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
     })();
   }, [path]);
 
-  if (!image) {
+  if (!image || !path) {
+    return <Image source={fallback} style={styles.profileImage} />;
   }
 
   return <Image source={{ uri: image || fallback }} {...imageProps} />;
 };
 
 export default RemoteImage;
+
+const styles = StyleSheet.create({
+  profileImage: {
+    width: 225,
+    height: 225,
+    alignSelf: "center",
+    borderRadius: 125,
+    marginBottom: 20,
+    top: -220,
+  },
+});
