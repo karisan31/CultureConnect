@@ -3,6 +3,7 @@ import * as React from "react";
 import { Avatar, Button, Card, Text } from "react-native-paper";
 import { Link } from "expo-router";
 import { StyleSheet } from "react-native";
+import RemoteImage from "./RemoteImage";
 
 export const defaultPartyImage =
   "https://img.freepik.com/free-vector/happy-friends-celebrating-event-together_74855-7482.jpg";
