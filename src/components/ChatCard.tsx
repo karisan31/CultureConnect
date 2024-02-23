@@ -29,6 +29,7 @@ export default function ChatCard({ chat }: Props): JSX.Element {
   const [otherUser, setOtherUser] = useState<string | null>(null);
 
   const { users } = chat;
+  console.log(users, "help");
   const userIds = getChatUserNames(users);
 
   useEffect(() => {
