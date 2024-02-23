@@ -68,7 +68,6 @@ export default function EventCard({ event }: EventProps) {
         />
         <Card.Actions>
           <Button onPress={goToEventPage}>More Info</Button>
-
           <Button>Going!</Button>
         </Card.Actions>
       </Card>
