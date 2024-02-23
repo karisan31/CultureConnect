@@ -1,15 +1,18 @@
 import { StyleSheet, Image, Button } from "react-native";
 import { Text, View } from "@/src/components/Themed";
 import EventsList from "@/src/components/EventsList";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 export default function Homepage() {
+  function viewMap () {
+    router.navigate("/(tabs)/Home/Map")
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}> CultureConnect </Text>
       <View style={styles.buttonsContainer}>
         <Button title="List"></Button>
-        <Link href={"/(tabs)/Home/Map"}><Text>Map</Text></Link>
+        <Button title="Map" onPress={viewMap}></Button>
       </View>
       <View style={styles.container}>
         <EventsList />

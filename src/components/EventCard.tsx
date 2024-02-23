@@ -1,8 +1,8 @@
 import { View } from "@/src/components/Themed";
 import * as React from "react";
 import { Avatar, Button, Card, Text } from "react-native-paper";
-import { Link } from "expo-router";
-import { StyleSheet } from "react-native";
+import { Link, router } from "expo-router";
+import { Image, StyleSheet } from "react-native";
 import RemoteImage from "./RemoteImage";
 
 export const defaultPartyImage =
@@ -23,6 +23,10 @@ type EventProps = {
 export default function EventCard({ event }: EventProps) {
   const eventDate = new Date(event.date);
 
+  function goToEventPage() {
+    router.navigate(`/(tabs)/Home/${event.event_id}`);
+  }
+
   const readableDate = eventDate.toLocaleString("en-US", {
     year: "numeric",
     month: "long",
@@ -32,34 +36,43 @@ export default function EventCard({ event }: EventProps) {
     hour12: true,
   });
   return (
-    <Card style={styles.card}>
-      <Card.Content>
-        <Text variant="titleLarge">{event.title}</Text>
-        <View
-          style={styles.separator}
-          lightColor="#eee"
-          darkColor="rgba(255,255,255,0.1)"
+    <View>
+      <Card style={styles.card}>
+        <Card.Content>
+          <Text variant="titleLarge">{event.title}</Text>
+          <View
+            style={styles.separator}
+            lightColor="#eee"
+            darkColor="rgba(255,255,255,0.1)"
+          />
+          <Text variant="bodyMedium">{event.description}</Text>
+          <Text variant="bodyMedium">{readableDate}</Text>
+          <Text variant="bodyMedium">
+            Max Attendees: {event.max_attendees || "N/A"}
+          </Text>
+        </Card.Content>
+        <RemoteImage
+          path={event.image}
+          fallback={defaultPartyImage}
+          style={[
+            styles.image,
+            {
+              height: 200,
+              marginTop: 10,
+              marginLeft: 5,
+              marginRight: 5,
+              borderRadius: 15,
+            },
+          ]}
+          bucket="event_images"
         />
-        <Text variant="bodyMedium">{event.description}</Text>
-        <Text variant="bodyMedium">{readableDate}</Text>
-        <Text variant="bodyMedium">
-          Max Attendees: {event.max_attendees || "N/A"}
-        </Text>
-      </Card.Content>
-      <Card.Cover
-        style={styles.image}
-        source={{
-          uri: event.image || defaultPartyImage,
-        }}
-      />
-      <Card.Actions>
-        <Button>
-          <Link href={`/(tabs)/Home/${event.event_id}`}>More Info</Link>
-        </Button>
+        <Card.Actions>
+          <Button onPress={goToEventPage}>More Info</Button>
 
-        <Button>Going!</Button>
-      </Card.Actions>
-    </Card>
+          <Button>Going!</Button>
+        </Card.Actions>
+      </Card>
+    </View>
   );
 }
 
