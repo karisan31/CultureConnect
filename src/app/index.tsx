@@ -15,6 +15,9 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import { randomUUID } from "expo-crypto";
+import { decode } from "base64-arraybuffer";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -46,8 +49,11 @@ const Login = () => {
   const onCreateAccount = () => {
     setSignIn(!signIn);
   };
+
   const onSignUpPress = async () => {
     setLoading(true);
+
+    const imageData = await uploadImage();
 
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -57,7 +63,7 @@ const Login = () => {
           first_name: firstName,
           second_name: secondName,
           bio: bio,
-          avatar_url: image,
+          avatar_url: imageData,
         },
       },
     });
@@ -78,6 +84,26 @@ const Login = () => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
+  };
+
+  const uploadImage = async () => {
+    if (!image?.startsWith("file://")) {
+      return;
+    }
+
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: "base64",
+    });
+    const filePath = `${randomUUID()}`;
+    const contentType = "image/*";
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .upload(filePath, decode(base64), { contentType });
+
+    if (data) {
+      return data.path;
+    }
+    console.log(error, "error");
   };
 
   return signIn ? (
