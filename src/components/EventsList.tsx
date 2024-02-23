@@ -1,13 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Button,
-  useColorScheme,
-  FlatList,
-} from "react-native";
-import Colors from "../constants/Colors";
+import { View, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { fetchEvents } from "../Utils/api";
 import Loading from "./Loading";
@@ -30,13 +21,6 @@ export default function EventsList() {
       }
     });
   }, []);
-
-  const theme = useColorScheme();
-  const textColor = [
-    theme === "dark"
-      ? { color: Colors.dark.text }
-      : { color: Colors.light.text },
-  ];
 
   return (
     <View>
