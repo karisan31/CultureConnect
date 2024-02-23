@@ -1,8 +1,8 @@
 import { View } from "@/src/components/Themed";
 import * as React from "react";
 import { Avatar, Button, Card, Text } from "react-native-paper";
-import { StyleSheet, Image } from "react-native";
 import { Link } from "expo-router";
+import { StyleSheet } from "react-native";
 
 export const defaultPartyImage =
   "https://img.freepik.com/free-vector/happy-friends-celebrating-event-together_74855-7482.jpg";
@@ -13,7 +13,7 @@ type EventProps = {
     date: string;
     title: string;
     description: string | null;
-    attendees: number | null;
+    max_attendees: number | null;
     location: object;
     image: string | null;
   };
@@ -31,14 +31,22 @@ export default function EventCard({ event }: EventProps) {
     hour12: true,
   });
   return (
-    <Card>
+    <Card style={styles.card}>
       <Card.Content>
         <Text variant="titleLarge">{event.title}</Text>
+        <View
+          style={styles.separator}
+          lightColor="#eee"
+          darkColor="rgba(255,255,255,0.1)"
+        />
         <Text variant="bodyMedium">{event.description}</Text>
         <Text variant="bodyMedium">{readableDate}</Text>
-        <Text variant="bodyMedium">Max Attendees: {event.attendees}</Text>
+        <Text variant="bodyMedium">
+          Max Attendees: {event.max_attendees || "N/A"}
+        </Text>
       </Card.Content>
       <Card.Cover
+        style={styles.image}
         source={{
           uri: event.image || defaultPartyImage,
         }}
@@ -51,42 +59,20 @@ export default function EventCard({ event }: EventProps) {
         <Button>Going!</Button>
       </Card.Actions>
     </Card>
-
-    // <View style={styles.container}>
-    //   <Text variant="titleLarge">{event.title}</Text>
-    //   <Text variant="bodyMedium">{event.description}</Text>
-    //   <Text variant="bodyMedium">{event.date}</Text>
-    //   <Text variant="bodyMedium">Max Attendees:{event.attendees}</Text>
-    //   <Image
-    //     source={{
-    //       uri: event.image || defaultPartyImage,
-    //     }}
-    //     style={styles.image}
-    //     resizeMode="contain"
-    //   />
-    // </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "black",
+  card: {
+    marginVertical: 10,
   },
   image: {
-    width: "100%",
-    aspectRatio: 1,
-    height: 200,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
+    width: "95%",
+    alignSelf: "center",
   },
   separator: {
-    marginVertical: 30,
+    marginVertical: 5,
     height: 1,
-    width: "80%",
+    width: "100%",
   },
 });
