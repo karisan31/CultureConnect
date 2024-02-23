@@ -59,6 +59,7 @@ export default function EventDetails() {
             path={eventData[0].image}
             fallback={defaultPartyImage}
             style={styles.image}
+            bucket="event_images"
           />
         </View>
         <View style={styles.container}>
