@@ -1,5 +1,7 @@
+import { supabase } from "@/config/initSupabase";
 import {
   fetchChatMessagesByChatId,
+  fetchUserid,
   getChatUserNames,
   useCurrentUser,
   useOtherUser,
@@ -13,16 +15,18 @@ import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 interface Message {
   id: number;
+  content: string;
 }
 
 export default function chatRoom() {
   const { chat_id } = useLocalSearchParams();
   const [messageData, setMessageData] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  //   const userIds = getChatUserNames(users);
-  console.log(chat_id, "chatid");
+  const [UserIds, setUserIds] = useState([]);
   const currentUser = useCurrentUser();
-  console.log(currentUser, "currentuser");
+  console.log(currentUser, "user");
+
+  //   const userIds =
   //   const profileData = useProfileData(userIds);
   //   const otherUser = useOtherUser(currentUser, profileData);
   useEffect(() => {
@@ -36,14 +40,31 @@ export default function chatRoom() {
         console.error("Error fetching messages:", error.message);
       }
     };
+    async function fetchChatById(chatId: any) {
+      try {
+        const { data, error } = await supabase
+          .from("chat_users")
+          .select("*")
+          .eq("chats_id", chatId);
+
+        if (error) {
+          throw error;
+        }
+        return data;
+      } catch (error: any) {
+        console.error("Error fetching chat:", error.message);
+        return null;
+      }
+    }
 
     fetchMessages();
+    fetchChatById(chat_id);
   }, [chat_id]);
-  console.log(messageData[0]?.id, "messageData");
 
   if (isLoading) {
     return <Loading />;
   }
+  console.log(messageData);
   return (
     <>
       <Stack.Screen options={{ title: `Chatting with: ` }} />
@@ -54,7 +75,6 @@ export default function chatRoom() {
           <MessagesCard key={chat.id} chat={chat} />
         ))}
       </View>
-      <Text>Hi</Text>
     </>
   );
 }
