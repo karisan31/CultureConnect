@@ -9,6 +9,8 @@ import { useNavigation } from "@react-navigation/native";
 import Loading from "@/src/components/Loading";
 import RemoteImage from "@/src/components/RemoteImage";
 
+export const defaultPartyImage =
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png";
 interface ProfileData {
   avatar_url: string;
   first_name: string;
@@ -41,7 +43,6 @@ export default function ProfileDataScreen() {
           }
 
           if (data) {
-            // console.log(data);
             setProfileData(data);
             setIsLoading(false);
           }
@@ -76,13 +77,11 @@ export default function ProfileDataScreen() {
       />
       <RemoteImage
         path={profileData?.avatar_url}
-        fallback={require("../../../../assets/images/defaultProfile.png")}
+        fallback={defaultPartyImage}
         style={styles.profileImage}
+        bucket="avatars"
       />
-      {/* <Image
-        source={require("../../../../assets/images/defaultProfile.png")}
-        style={styles.profileImage}
-      /> */}
+
       <Text style={styles.name}>
         {profileData?.first_name} {profileData?.second_name}
       </Text>
