@@ -4,6 +4,8 @@ import { Text, View } from "@/src/components/Themed";
 import { Image } from "react-native";
 import { Link } from "expo-router";
 import { supabase } from "@/config/initSupabase";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 interface ProfileData {
   avatar_url: string;
@@ -15,8 +17,10 @@ interface ProfileData {
 
 export default function ProfileDataScreen() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
+    navigation.setOptions({ headerShown: false });
     async function fetchProfileData() {
       try {
         const user = await supabase.auth.getUser();
@@ -34,7 +38,6 @@ export default function ProfileDataScreen() {
 
           if (data) {
             setProfileData(data);
-            console.log(data);
           }
         }
       } catch (error) {
@@ -54,9 +57,13 @@ export default function ProfileDataScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>User Profile</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={[styles.viewProfileText, { zIndex: 1 }]}>My Profile</Text>
 
+      <Image
+        source={require("../../../../assets/images/profileCover.png")}
+        style={styles.coverImage}
+      />
       <Image
         source={
           profileData?.avatar_url
@@ -66,22 +73,22 @@ export default function ProfileDataScreen() {
         style={styles.profileImage}
       />
 
-      <Text style={styles.profileData}>
-        First Name: {profileData?.first_name}
+      <Text style={styles.name}>
+        {profileData?.first_name} {profileData?.second_name}
       </Text>
-      <Text style={styles.profileData}>
-        Surname: {profileData?.second_name}
-      </Text>
-      <Text style={styles.profileData}>Email: {profileData?.email}</Text>
-      <Text style={styles.profileData}>Bio: {profileData?.bio}</Text>
+
+      <Text style={styles.bio}>{profileData?.bio}</Text>
+
+      <Text style={styles.profileData}>{profileData?.email}</Text>
 
       <Link href={"/UserProfile/EditProfile"} style={styles.editProfile}>
         <Text>Edit Profile</Text>
       </Link>
+
       <TouchableOpacity onPress={handleSignOut} style={styles.signOut}>
         <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -89,19 +96,53 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "flex-start",
+    top: -200,
+  },
+  coverImage: {
+    width: 700,
+    height: 500,
+    top: -100,
+    borderRadius: 280,
+  },
+  viewProfileText: {
+    top: 230,
+    color: "white",
+    fontSize: 30,
+    fontWeight: "bold",
+    alignSelf: "center",
     justifyContent: "center",
   },
   editProfile: {
     marginTop: 10,
     marginBottom: 10,
+    top: -200,
+    textDecorationLine: "underline",
   },
   profileData: {
     padding: 10,
+    top: -220,
+    fontSize: 18,
+    marginBottom: 30,
+  },
+  bio: {
+    padding: 20,
+    top: -230,
+    fontSize: 20,
+    fontWeight: "bold",
+    alignSelf: "center",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
+    marginTop: 20,
+  },
+  name: {
+    fontSize: 40,
+    fontWeight: "bold",
+    marginBottom: 20,
+    top: -220,
   },
   separator: {
     marginVertical: 30,
@@ -109,16 +150,18 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   profileImage: {
-    width: 140,
-    height: 140,
+    width: 225,
+    height: 225,
     alignSelf: "center",
-    borderRadius: 85,
+    borderRadius: 125,
     marginBottom: 20,
+    top: -220,
   },
   signOut: {
     padding: 15,
-    backgroundColor: "#6750a4",
+    backgroundColor: "#50C878",
     borderRadius: 25,
+    top: -200,
   },
   signOutText: {
     color: "white",

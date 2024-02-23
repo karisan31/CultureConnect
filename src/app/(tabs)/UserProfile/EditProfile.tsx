@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     padding: 20,
-    backgroundColor: "#151515",
   },
   header: {
     fontSize: 30,
