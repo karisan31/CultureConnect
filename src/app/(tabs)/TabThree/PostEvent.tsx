@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
@@ -18,10 +18,11 @@ import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import { randomUUID } from "expo-crypto";
 import { decode } from "base64-arraybuffer";
+import * as Location from "expo-location";
 
 export default function PostEvent() {
-  const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
   const [locationObject, setLocationObject] = useState({
     latitude: "-29.2434067",
     longitude: "-51.1985995",
@@ -32,26 +33,33 @@ export default function PostEvent() {
   );
   const [description, setDescription] = useState<string | undefined>(undefined);
   const [image, setImage] = useState<string | undefined>(undefined);
-  const [hostId, setHostId] = useState<string | undefined>("");
+  const [hostId, setHostId] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputDate, setInputDate] = useState<Date | undefined>(undefined);
   const [visible, setVisible] = useState<boolean>(false);
-  const [timeHours, setTimeHours] = useState<number>(12);
-  const [timeMinutes, setTimeMinutes] = useState<number>(15);
+  const [timeHours, setTimeHours] = useState<number>(0);
+  const [timeMinutes, setTimeMinutes] = useState<number>(0);
   const [file, setFile] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isError, setIsError] = useState<boolean>(false);
-
   const router = useRouter();
 
+  const fetchData = () => {
+    supabase.auth.getUser().then((user) => {
+      setHostId(user.data.user?.id);
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+
+  }, []);
+
   const handleSubmit = () => {
+    setLoading(true);
     setIsError(false);
-    supabase.auth
-      .getUser()
-      .then((user) => {
-        setHostId(user.data.user?.id);
-        return uploadImage();
-      })
+    geoCode();
+    uploadImage()
       .then((imagePath) => {
         date?.setHours(timeHours);
         date?.setMinutes(date.getMinutes() + timeMinutes);
@@ -80,10 +88,11 @@ export default function PostEvent() {
         return supabase.from("events").insert([newEvent]).select();
       })
       .then((result) => {
-        console.log(result);
         if (result.error) {
+          setLoading(false);
           setIsError(true);
         } else {
+          setLoading(false);
           router.navigate("/TabThree/MyEvents");
         }
       });
@@ -115,11 +124,11 @@ export default function PostEvent() {
   );
 
   const uploadImage = async () => {
-    if (!image?.startsWith("file://")) {
+    if (!file?.startsWith("file://")) {
       return;
     }
 
-    const base64 = await FileSystem.readAsStringAsync(image, {
+    const base64 = await FileSystem.readAsStringAsync(file, {
       encoding: "base64",
     });
     const filePath = `${randomUUID()}`;
@@ -131,6 +140,7 @@ export default function PostEvent() {
     if (data) {
       return data.path;
     }
+    console.log(error, "error");
   };
 
   const pickImage = async () => {
@@ -146,7 +156,7 @@ export default function PostEvent() {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        aspect: [1, 1],
+        aspect: [4, 3],
         quality: 1,
       });
 
@@ -155,6 +165,11 @@ export default function PostEvent() {
         setError(null);
       }
     }
+  };
+
+  const geoCode = async () => {
+    const geocodedLocation = await Location.geocodeAsync(location);
+    console.log(geocodedLocation);
   };
 
   return (
@@ -178,7 +193,7 @@ export default function PostEvent() {
       />
 
       <TextInput
-        placeholder="City"
+        placeholder="Location"
         value={location}
         onChangeText={setLocation}
         mode="outlined"
@@ -212,7 +227,8 @@ export default function PostEvent() {
           }}
         >
           <Text style={{ marginBottom: 5, marginTop: 5 }}>
-            {timeHours}:{timeMinutes === 0 ? "00" : timeMinutes}
+            Time: {timeHours < 10 ? `0${timeHours}` : timeHours}:
+            {timeMinutes < 10 ? `0${timeMinutes}` : timeMinutes}
           </Text>
           <Button
             onPress={() => setVisible(true)}
@@ -230,8 +246,8 @@ export default function PostEvent() {
             visible={visible}
             onDismiss={onDismiss}
             onConfirm={onConfirm}
-            hours={12}
-            minutes={14}
+            hours={0}
+            minutes={0}
           />
         </View>
       </View>
