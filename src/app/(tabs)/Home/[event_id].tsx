@@ -6,6 +6,7 @@ import { useLocalSearchParams, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import * as React from "react";
 import { Image, StyleSheet } from "react-native";
+import RemoteImage from "@/src/components/RemoteImage";
 
 export default function EventDetails() {
   const { event_id } = useLocalSearchParams();
@@ -54,8 +55,9 @@ export default function EventDetails() {
             lightColor="#eee"
             darkColor="rgba(255,255,255,0.1)"
           />
-          <Image
-            source={{ uri: eventData[0].image || defaultPartyImage }}
+          <RemoteImage
+            path={eventData[0].image}
+            fallback={defaultPartyImage}
             style={styles.image}
           />
         </View>
