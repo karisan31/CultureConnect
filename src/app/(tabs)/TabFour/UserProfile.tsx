@@ -6,6 +6,7 @@ import { Link } from "expo-router";
 import { supabase } from "@/config/initSupabase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import Loading from "@/src/components/Loading";
 
 interface ProfileData {
   avatar_url: string;
@@ -18,8 +19,10 @@ interface ProfileData {
 export default function ProfileDataScreen() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     navigation.setOptions({ headerShown: false });
     async function fetchProfileData() {
       try {
@@ -38,6 +41,7 @@ export default function ProfileDataScreen() {
 
           if (data) {
             setProfileData(data);
+            setIsLoading(false);
           }
         }
       } catch (error) {
@@ -55,6 +59,10 @@ export default function ProfileDataScreen() {
       console.error("Error signing out:");
     }
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -81,7 +89,7 @@ export default function ProfileDataScreen() {
 
       <Text style={styles.profileData}>{profileData?.email}</Text>
 
-      <Link href={"/UserProfile/EditProfile"} style={styles.editProfile}>
+      <Link href={"/TabFour/EditProfile"} style={styles.editProfile}>
         <Text>Edit Profile</Text>
       </Link>
 

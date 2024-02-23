@@ -16,9 +16,7 @@ export default function TabThreeScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      {/* <Link href={"/MyEvents/PostEvent"}> */}
       <Button title="Host an event!" onPress={goToPostEvent}></Button>
-      {/* </Link> */}
     </View>
   );
 }
