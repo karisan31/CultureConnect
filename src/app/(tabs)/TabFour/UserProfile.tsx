@@ -40,6 +40,7 @@ export default function ProfileDataScreen() {
           }
 
           if (data) {
+            console.log(data);
             setProfileData(data);
             setIsLoading(false);
           }
@@ -72,15 +73,18 @@ export default function ProfileDataScreen() {
         source={require("../../../../assets/images/profileCover.png")}
         style={styles.coverImage}
       />
-      <Image
+      {/* <Image
         source={
           profileData?.avatar_url
             ? { uri: profileData.avatar_url }
             : require("../../../../assets/images/defaultProfile.png")
         }
         style={styles.profileImage}
+      /> */}
+      <Image
+        source={require("../../../../assets/images/defaultProfile.png")}
+        style={styles.profileImage}
       />
-
       <Text style={styles.name}>
         {profileData?.first_name} {profileData?.second_name}
       </Text>
