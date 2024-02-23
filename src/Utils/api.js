@@ -179,5 +179,3 @@ export async function fetchChatMessagesByChatId(chatId) {
     return null;
   }
 }
-
-fetchChatMessagesByChatId(1);
