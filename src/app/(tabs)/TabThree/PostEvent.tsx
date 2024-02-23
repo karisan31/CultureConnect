@@ -84,7 +84,7 @@ export default function PostEvent() {
         if (result.error) {
           setIsError(true);
         } else {
-          router.navigate("/MyEvents/MyEvents");
+          router.navigate("/TabThree/MyEvents");
         }
       });
   };

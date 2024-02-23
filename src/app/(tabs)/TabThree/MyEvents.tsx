@@ -4,9 +4,9 @@ import { Text, View } from "@/src/components/Themed";
 import { Link, useRouter } from "expo-router";
 
 export default function TabThreeScreen() {
-  const router = useRouter()
-  function goToPostEvent(){
-    router.navigate("/MyEvents/PostEvent")
+  const router = useRouter();
+  function goToPostEvent() {
+    router.navigate("/TabThree/PostEvent");
   }
   return (
     <View style={styles.container}>
@@ -17,7 +17,7 @@ export default function TabThreeScreen() {
         darkColor="rgba(255,255,255,0.1)"
       />
       {/* <Link href={"/MyEvents/PostEvent"}> */}
-        <Button title="Host an event!" onPress={goToPostEvent}></Button>
+      <Button title="Host an event!" onPress={goToPostEvent}></Button>
       {/* </Link> */}
     </View>
   );

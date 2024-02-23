@@ -38,7 +38,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Messages"
+        name="TabTwo"
         options={{
           title: "Messages",
           headerShown: false,
@@ -53,7 +53,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="MyEvents"
+        name="TabThree"
         options={{
           title: "MyEvents",
           headerShown: false,
@@ -63,7 +63,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="UserProfile"
+        name="TabFour"
         options={{
           headerShown: false,
           title: "My Profile",

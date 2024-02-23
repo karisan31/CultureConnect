@@ -81,7 +81,7 @@ export default function ChatCard({ chat }: Props): JSX.Element {
         <Text variant="bodyMedium">Chat with: {otherUser}</Text>
         <Card.Actions>
           <Button compact>
-            <Link href={`/(tabs)/Messages/${chat.id}`}>Open Chat</Link>
+            <Link href={`/(tabs)/TabTwo/${chat.id}`}>Open Chat</Link>
           </Button>
         </Card.Actions>
       </Card.Content>
