@@ -34,7 +34,6 @@ export default function ProfileDataScreen() {
 
           if (data) {
             setProfileData(data);
-            console.log(data);
           }
         }
       } catch (error) {

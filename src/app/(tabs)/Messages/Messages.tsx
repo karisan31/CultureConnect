@@ -3,9 +3,12 @@ import { fetchChatsByUserID } from "../../../Utils/api";
 import { Text, View } from "@/src/components/Themed";
 import { StyleSheet } from "react-native";
 import { setupSubscription } from "../../../Utils/api";
+import ChatCard from "@/src/components/ChatCard";
+import { Link } from "expo-router";
 
 interface Chat {
   id: number;
+  users: string[];
 }
 
 export default function Messages(): JSX.Element {
@@ -60,7 +63,7 @@ export default function Messages(): JSX.Element {
       <Text style={styles.title}>Messages</Text>
       <View style={styles.separator} />
       {allChats.map((chat) => (
-        <Text key={chat.id}>{chat.id}</Text>
+        <ChatCard key={chat.id} chat={chat} />
       ))}
     </View>
   );
