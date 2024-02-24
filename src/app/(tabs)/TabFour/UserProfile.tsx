@@ -64,7 +64,11 @@ export default function ProfileDataScreen() {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <View style={styles.loadingContainer}>
+        <Loading />
+      </View>
+    );
   }
 
   return (
@@ -107,6 +111,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     top: -200,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   coverImage: {
     width: 700,
