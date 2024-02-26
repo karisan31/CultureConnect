@@ -2,7 +2,7 @@ import { fetchEventByID } from "@/src/Utils/api";
 import { defaultPartyImage } from "@/src/components/EventCard";
 import Loading from "@/src/components/Loading";
 import { Text, View } from "@/src/components/Themed";
-import { useLocalSearchParams, Stack } from "expo-router";
+import { useLocalSearchParams, Stack, router, Link } from "expo-router";
 import { useEffect, useState } from "react";
 import * as React from "react";
 import { StyleSheet } from "react-native";
@@ -105,6 +105,11 @@ export default function EventDetails() {
     hour12: true,
   });
 
+
+  function goToMapPoint(){
+    router.navigate(`./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`);
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -170,6 +175,7 @@ export default function EventDetails() {
               time.
             </Text>
           ) : null}
+          <Button onPress={goToMapPoint}>View on Map</Button>
         </View>
       </View>
     </>

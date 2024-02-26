@@ -5,11 +5,12 @@ import * as Location from "expo-location";
 import { Text } from "@/src/components/Themed";
 import { fetchEvents } from "@/src/Utils/api";
 import Loading from "@/src/components/Loading";
-import { useLocation } from "../../../components/LocationContext";
 import { defaultPartyImage } from "@/src/components/EventCard";
 import RemoteImage from "@/src/components/RemoteImage";
 import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
+import { useLocation } from "@/src/components/LocationContext";
+import { useLocalSearchParams } from "expo-router";
 
 interface Event {
   date: string;
@@ -26,6 +27,7 @@ interface Event {
 }
 
 export default function Map() {
+  const fromEvent = useLocalSearchParams();
   const { location } = useLocation();
   const [initialRegion, setInitialRegion] = useState({
     latitude: 54.7024,
@@ -39,6 +41,15 @@ export default function Map() {
 
   useEffect(() => {
     setIsLoading(true);
+    if (!isNaN(Number(fromEvent.lat))) {
+      console.log(fromEvent)
+      setInitialRegion({
+        latitude: Number(fromEvent.lat),
+        longitude: Number(fromEvent.long),
+        latitudeDelta: 10,
+        longitudeDelta: 10,
+      });
+    }
     fetchEvents().then((data) => {
       if (data && data.data) {
         setEvents(data.data);
@@ -50,7 +61,7 @@ export default function Map() {
   }, []);
 
   function goToEvent(event_id: number) {
-    router.navigate(`./${event_id}`)
+    router.navigate(`./${event_id}`);
   }
 
   if (isLoading) {
@@ -90,7 +101,12 @@ export default function Map() {
                     : 0,
                 }}
               >
-                <Callout style={styles.container} onPress={()=>{goToEvent(event.event_id)}}>
+                <Callout
+                  style={styles.container}
+                  onPress={() => {
+                    goToEvent(event.event_id);
+                  }}
+                >
                   <View style={styles.calloutContainer}>
                     <Text style={styles.calloutText}>{event.title}</Text>
                     <RemoteImage
