@@ -31,10 +31,9 @@ export default function EventsList() {
       {isLoading ? (
         <Loading />
       ) : (
-        <FlatList
-          data={eventsData}
-          renderItem={({ item }) => <EventCard event={item} />}
-        />
+        eventsData.map((event, index) => (
+          <EventCard key={index} event={event} />
+        ))
       )}
     </View>
   );

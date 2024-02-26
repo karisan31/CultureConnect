@@ -9,23 +9,22 @@ export default function Homepage() {
     router.navigate("/(tabs)/Home/Map");
   }
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../../../../assets/images/profileCover.png")}
-        style={styles.coverImage}
-      />
-      <Text style={[styles.title, { zIndex: 1 }]}> Home</Text>
-      <Button mode="contained" onPress={viewMap} style={styles.map}>
-        Map
-      </Button>
+    <ScrollView>
+      <View style={styles.container}>
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImage}
+        />
+        <Text style={[styles.title, { zIndex: 1 }]}> Home</Text>
+        <Button mode="contained" onPress={viewMap} style={styles.map}>
+          Map
+        </Button>
 
-      <View style={styles.listContainer}>
-        <EventsList />
+        <View style={styles.listContainer}>
+          <EventsList />
+        </View>
       </View>
-      <View>
-        <Text>End of Events</Text>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -35,34 +34,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     minHeight: "100%",
+    marginBottom: -340,
   },
   listContainer: {
-    top: -300,
-    marginBottom: 300,
+    top: -350,
+    marginTop: 20,
   },
   title: {
-    top: -440,
     color: "white",
+    top: -440,
     fontSize: 30,
     fontWeight: "bold",
     alignSelf: "center",
     justifyContent: "center",
   },
-  buttonsContainer: {
-    flexDirection: "row",
-    top: -500,
+  map: {
+    marginVertical: 10,
+    top: -410,
   },
   coverImage: {
+    top: -240,
     width: 700,
     height: 500,
-    top: -240,
     borderRadius: 280,
-  },
-  list: {
-    margin: 5,
-  },
-  map: {
-    margin: 5,
-    top: -405,
   },
 });
