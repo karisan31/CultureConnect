@@ -5,29 +5,84 @@ import { Text, View } from "@/src/components/Themed";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import * as React from "react";
-import { Image, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import RemoteImage from "@/src/components/RemoteImage";
 import { supabase } from "@/config/initSupabase";
+import { Button } from "react-native-paper";
 
 export default function EventDetails() {
   const { event_id } = useLocalSearchParams();
   const [eventData, setEventData] = useState<any | null>(null);
   const [err, setErr] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [host, setHost] = useState<string>("");
+  const [host, setHost] = useState<any>({});
+  const [hostError, setHostError] = useState<boolean>(false);
+  const [isAttending, setIsAttending] = useState<boolean>(false);
+  const [attendError, setAttendError] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    fetchEventByID(event_id).then(({ data, error }) => {
-      if (data) {
-        setIsLoading(false);
-        setEventData(data);
-        supabase.from("profiles").select("*");
-        console.log(data)
-      } else {
-        setErr(error);
-      }
+    supabase.auth.getUser().then((user) => {
+      setCurrentUser(user.data.user?.id);
+      fetchEventByID(event_id).then(({ data, error }) => {
+        if (data) {
+          setIsLoading(false);
+          setEventData(data);
+          supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", data[0].host_id)
+            .then((userData) => {
+              if (userData.data !== null) {
+                setHost(userData.data[0]);
+              } else {
+                setHostError(true);
+              }
+              return supabase
+                .from("attendees")
+                .select("ticket_id")
+                .eq("user_id", user.data.user?.id)
+                .eq("event_id", event_id);
+            })
+            .then((attending) => {
+              if (attending.error) {
+                setIsAttending(false);
+              } else {
+                setIsAttending(true);
+              }
+            });
+        } else {
+          setErr(error);
+        }
+      });
     });
   }, [event_id]);
+
+  async function attendingClick() {
+    setAttendError(false);
+    if (isAttending) {
+      setIsAttending(false);
+      const { error } = await supabase
+        .from("attendees")
+        .delete()
+        .eq("user_id", currentUser)
+        .eq("event_id", event_id);
+      if (error) {
+        setIsAttending(true);
+        setAttendError(true);
+      }
+    } else {
+      setIsAttending(true);
+      const { data, error } = await supabase
+        .from("attendees")
+        .insert([{ user_id: currentUser, event_id: event_id }])
+        .select();
+      if (error) {
+        setIsAttending(false);
+        setAttendError(true);
+      }
+    }
+  }
 
   if (isLoading) {
     return <Loading />;
@@ -68,16 +123,51 @@ export default function EventDetails() {
         </View>
         <View style={styles.container}>
           <Text style={styles.title}>Host: </Text>
-          <Text> {host}</Text>
+          {hostError ? (
+            <Text>Something went wrong, host not found.</Text>
+          ) : (
+            <Text> {`${host.first_name} ${host.second_name}`}</Text>
+          )}
           <Text style={styles.title}>Date: </Text>
           <Text> {readableDate}</Text>
           <Text style={styles.title}>Location:</Text>
           <Text> {eventData[0].address}</Text>
-          <Text style={styles.title}>
-            Maximum attendees: {eventData[0].max_attendees}
-          </Text>
+          {eventData[0].max_attendees ? (
+            <Text style={styles.title}>
+              Maximum attendees: {eventData[0].max_attendees}
+            </Text>
+          ) : (
+            <Text style={styles.title}>Maximum attendees: N/A</Text>
+          )}
           <Text style={styles.title}>Description:</Text>
-          <Text> {eventData[0].description}</Text>
+          {eventData[0].description ? (
+            <Text>{eventData[0].description}</Text>
+          ) : (
+            <Text>No description for this event</Text>
+          )}
+          {isAttending ? (
+            <Button
+              style={{ backgroundColor: "pink", width: 100 }}
+              onPress={attendingClick}
+              labelStyle={{ color: "black" }}
+            >
+              Cancel
+            </Button>
+          ) : (
+            <Button
+              style={{ backgroundColor: "#CBC3E3", width: 100 }}
+              onPress={attendingClick}
+              labelStyle={{ color: "black" }}
+            >
+              Going!
+            </Button>
+          )}
+          {attendError ? (
+            <Text>
+              Something went wrong! Cannot change attendance status at this
+              time.
+            </Text>
+          ) : null}
         </View>
       </View>
     </>
