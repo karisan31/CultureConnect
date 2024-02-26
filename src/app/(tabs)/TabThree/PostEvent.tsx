@@ -50,44 +50,46 @@ export default function PostEvent() {
     fetchData();
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setLoading(true);
     setIsError(false);
     geoCode();
-    const imagePath = await uploadImage();
-    date?.setHours(timeHours);
-    date?.setMinutes(date.getMinutes() + timeMinutes);
-    if (isNaN(Number(maxAttendees))) {
-      setMaxAttendees(undefined);
-    }
-    if (description?.length === 0) {
-      setDescription(undefined);
-    }
-    if (imagePath?.length === 0) {
-      setImage(undefined);
-    } else {
-      setImage(imagePath);
-    }
-    const newEvent = {
-      title: title,
-      address: address,
-      location: locationObject,
-      date: date,
-      host_id: hostId,
-      max_attendees: maxAttendees,
-      description: description,
-      image: image,
-    };
-    const result = await supabase.from("events").insert([newEvent]).select();
-
-    if (result.error) {
-      setLoading(false);
-      setIsError(true);
-    } else {
-      console.log(newEvent);
-      setLoading(false);
-      router.navigate("/TabThree/MyEvents");
-    }
+    uploadImage()
+      .then((imagePath) => {
+        date?.setHours(timeHours);
+        date?.setMinutes(date.getMinutes() + timeMinutes);
+        if (isNaN(Number(maxAttendees))) {
+          setMaxAttendees(undefined);
+        }
+        if (description?.length === 0) {
+          setDescription(undefined);
+        }
+        if (imagePath?.length === 0) {
+          setImage(undefined);
+        } else {
+          setImage(imagePath);
+        }
+        const newEvent = {
+          title: title,
+          address: address,
+          location: locationObject,
+          date: date,
+          host_id: hostId,
+          max_attendees: maxAttendees,
+          description: description,
+          image: image,
+        };
+        return supabase.from("events").insert([newEvent]).select();
+      })
+      .then((result) => {
+        if (result.error) {
+          setLoading(false);
+          setIsError(true);
+        } else {
+          setLoading(false);
+          router.navigate("/TabThree/MyEvents");
+        }
+      });
   };
 
   const onDismiss = useCallback(() => {
