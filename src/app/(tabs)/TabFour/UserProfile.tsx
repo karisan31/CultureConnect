@@ -1,6 +1,6 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
 import { useState, useEffect } from "react";
-import { Text, View } from "@/src/components/Themed";
+import { Text, View, ScrollView } from "@/src/components/Themed";
 import { Image } from "react-native";
 import { Link } from "expo-router";
 import { supabase } from "@/config/initSupabase";
@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import Loading from "@/src/components/Loading";
 import RemoteImage from "@/src/components/RemoteImage";
 
-export const defaultPartyImage =
+export const defaultProfileImage =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png";
 interface ProfileData {
   avatar_url: string;
@@ -72,36 +72,37 @@ export default function ProfileDataScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={[styles.viewProfileText, { zIndex: 1 }]}>My Profile</Text>
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+        <Text style={[styles.viewProfileText, { zIndex: 1 }]}>My Profile</Text>
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImage}
+        />
+        <RemoteImage
+          path={profileData?.avatar_url}
+          fallback={defaultProfileImage}
+          style={styles.profileImage}
+          bucket="avatars"
+        />
 
-      <Image
-        source={require("../../../../assets/images/profileCover.png")}
-        style={styles.coverImage}
-      />
-      <RemoteImage
-        path={profileData?.avatar_url}
-        fallback={defaultPartyImage}
-        style={styles.profileImage}
-        bucket="avatars"
-      />
+        <Text style={styles.name}>
+          {profileData?.first_name} {profileData?.second_name}
+        </Text>
 
-      <Text style={styles.name}>
-        {profileData?.first_name} {profileData?.second_name}
-      </Text>
+        <Text style={styles.bio}>{profileData?.bio}</Text>
 
-      <Text style={styles.bio}>{profileData?.bio}</Text>
+        <Text style={styles.profileData}>{profileData?.email}</Text>
 
-      <Text style={styles.profileData}>{profileData?.email}</Text>
+        <Link href={"/TabFour/EditProfile"} style={styles.editProfile}>
+          <Text>Edit Profile</Text>
+        </Link>
 
-      <Link href={"/TabFour/EditProfile"} style={styles.editProfile}>
-        <Text>Edit Profile</Text>
-      </Link>
-
-      <TouchableOpacity onPress={handleSignOut} style={styles.signOut}>
-        <Text style={styles.signOutText}>Sign Out</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity onPress={handleSignOut} style={styles.signOut}>
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 
@@ -111,6 +112,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     top: -200,
+    marginTop: -250,
+    marginBottom: -200,
   },
   loadingContainer: {
     flex: 1,
@@ -120,11 +123,11 @@ const styles = StyleSheet.create({
   coverImage: {
     width: 700,
     height: 500,
-    top: -100,
+    top: 115,
     borderRadius: 280,
   },
   viewProfileText: {
-    top: 230,
+    top: 450,
     color: "white",
     fontSize: 30,
     fontWeight: "bold",
@@ -134,18 +137,18 @@ const styles = StyleSheet.create({
   editProfile: {
     marginTop: 10,
     marginBottom: 10,
-    top: -200,
+    // top: -200,
     textDecorationLine: "underline",
   },
   profileData: {
     padding: 10,
-    top: -220,
+    // top: -220,
     fontSize: 18,
     marginBottom: 30,
   },
   bio: {
     padding: 20,
-    top: -230,
+    // top: -230,
     fontSize: 20,
     fontWeight: "bold",
     alignSelf: "center",
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     marginBottom: 20,
-    top: -220,
+    // top: -220,
   },
   separator: {
     marginVertical: 30,
@@ -173,13 +176,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 125,
     marginBottom: 20,
-    top: -220,
+    // top: -220,
   },
   signOut: {
     padding: 15,
     backgroundColor: "#50C878",
     borderRadius: 25,
-    top: -200,
+    // top: -200,
   },
   signOutText: {
     color: "white",

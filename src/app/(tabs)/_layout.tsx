@@ -55,7 +55,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="TabThree"
         options={{
-          title: "MyEvents",
+          title: "My Events",
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="event" size={24} color={color} />
