@@ -36,7 +36,7 @@ export default function EventCard({ event }: EventProps) {
   }
 
   React.useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     supabase.auth
       .getUser()
       .then((user) => {
@@ -147,6 +147,7 @@ export default function EventCard({ event }: EventProps) {
 const styles = StyleSheet.create({
   card: {
     marginVertical: 10,
+    marginHorizontal: 5,
   },
   image: {
     width: "95%",
