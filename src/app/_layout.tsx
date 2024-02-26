@@ -36,7 +36,7 @@ const RootLayout = () => {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <AuthProvider>
           <InitialLayout />
-        </AuthProvider>
+        </AuthProvider>        
       </ThemeProvider>
     </PaperProvider>
   );
