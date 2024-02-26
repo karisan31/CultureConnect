@@ -71,7 +71,7 @@ export default function PostEvent() {
         }
         const newEvent = {
           title: title,
-          address: address,
+          address: `${address}, ${postcode}`,
           location: locationObject,
           date: date,
           host_id: hostId,
