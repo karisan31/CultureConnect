@@ -10,7 +10,7 @@ export default function TabThreeScreen() {
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>MyEvents</Text>
+      <Text style={styles.title}>My Events</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
