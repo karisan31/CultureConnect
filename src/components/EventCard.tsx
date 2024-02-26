@@ -5,6 +5,7 @@ import { Link, router } from "expo-router";
 import { Image, StyleSheet } from "react-native";
 import RemoteImage from "./RemoteImage";
 import { supabase } from "@/config/initSupabase";
+import Loading from "./Loading";
 
 export const defaultPartyImage =
   "https://img.freepik.com/free-vector/happy-friends-celebrating-event-together_74855-7482.jpg";
@@ -27,6 +28,7 @@ export default function EventCard({ event }: EventProps) {
   const [currentUser, setCurrentUser] = React.useState<string | undefined>(
     undefined
   );
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const eventDate = new Date(event.date);
 
   function goToEventPage() {
@@ -34,6 +36,7 @@ export default function EventCard({ event }: EventProps) {
   }
 
   React.useEffect(() => {
+    setIsLoading(true)
     supabase.auth
       .getUser()
       .then((user) => {
@@ -50,6 +53,7 @@ export default function EventCard({ event }: EventProps) {
         } else {
           setIsAttending(true);
         }
+        setIsLoading(false);
       });
   }, []);
   async function attendingClick() {
@@ -87,49 +91,55 @@ export default function EventCard({ event }: EventProps) {
   });
   return (
     <View>
-      <Card style={styles.card}>
-        <Card.Content>
-          <Text variant="titleLarge">{event.title}</Text>
-          <View
-            style={styles.separator}
-            lightColor="#eee"
-            darkColor="rgba(255,255,255,0.1)"
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Card style={styles.card}>
+          <Card.Content>
+            <Text variant="titleLarge">{event.title}</Text>
+            <View
+              style={styles.separator}
+              lightColor="#eee"
+              darkColor="rgba(255,255,255,0.1)"
+            />
+            <Text variant="bodyMedium">{readableDate}</Text>
+          </Card.Content>
+          <RemoteImage
+            path={event.image}
+            fallback={defaultPartyImage}
+            style={[
+              styles.image,
+              {
+                height: 200,
+                marginTop: 10,
+                marginLeft: 5,
+                marginRight: 5,
+                borderRadius: 15,
+              },
+            ]}
+            bucket="event_images"
           />
-          {/* <Text variant="bodyMedium">{event.description}</Text> */}
-          <Text variant="bodyMedium">{readableDate}</Text>
-          {/* <Text variant="bodyMedium">
-            Max Attendees: {event.max_attendees || "N/A"}
-          </Text> */}
-        </Card.Content>
-        <RemoteImage
-          path={event.image}
-          fallback={defaultPartyImage}
-          style={[
-            styles.image,
-            {
-              height: 200,
-              marginTop: 10,
-              marginLeft: 5,
-              marginRight: 5,
-              borderRadius: 15,
-            },
-          ]}
-          bucket="event_images"
-        />
-        <Card.Actions>
-          <Button onPress={goToEventPage}>More Info</Button>
-          {isAttending ? (
-            <Button
-              style={{ backgroundColor: "pink" }}
-              onPress={attendingClick}
-            >
-              Cancel
-            </Button>
-          ) : (
-            <Button onPress={attendingClick}>Going!</Button>
-          )}
-        </Card.Actions>
-      </Card>
+          {attendError ? (
+            <Text>
+              Something went wrong! Cannot change attendance status at this
+              time.
+            </Text>
+          ) : null}
+          <Card.Actions>
+            <Button onPress={goToEventPage}>More Info</Button>
+            {isAttending ? (
+              <Button
+                style={{ backgroundColor: "pink" }}
+                onPress={attendingClick}
+              >
+                Cancel
+              </Button>
+            ) : (
+              <Button onPress={attendingClick}>Going!</Button>
+            )}
+          </Card.Actions>
+        </Card>
+      )}
     </View>
   );
 }

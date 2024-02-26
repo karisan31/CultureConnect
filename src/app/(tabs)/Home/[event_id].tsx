@@ -26,7 +26,6 @@ export default function EventDetails() {
       setCurrentUser(user.data.user?.id);
       fetchEventByID(event_id).then(({ data, error }) => {
         if (data) {
-          setIsLoading(false);
           setEventData(data);
           supabase
             .from("profiles")
@@ -47,8 +46,10 @@ export default function EventDetails() {
             .then((attending) => {
               if (attending.error) {
                 setIsAttending(false);
+                setIsLoading(false);
               } else {
                 setIsAttending(true);
+                setIsLoading(false);
               }
             });
         } else {
