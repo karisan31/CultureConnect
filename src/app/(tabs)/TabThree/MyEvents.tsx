@@ -1,15 +1,26 @@
-import { StyleSheet, Button } from "react-native";
+import { StyleSheet, Button, Image } from "react-native";
 
 import { Text, View } from "@/src/components/Themed";
-import { Link, useRouter } from "expo-router";
+import { Link, useNavigation, useRouter } from "expo-router";
+import { useEffect } from "react";
 
 export default function TabThreeScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  });
+
   function goToPostEvent() {
     router.navigate("/TabThree/PostEvent");
   }
   return (
     <View style={styles.container}>
+      <Image
+        source={require("../../../../assets/images/profileCover.png")}
+        style={styles.coverImage}
+      />
       <Text style={styles.title}>My Events</Text>
       <View
         style={styles.separator}
@@ -35,5 +46,11 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
+  coverImage: {
+    width: 700,
+    height: 500,
+    top: -315,
+    borderRadius: 300,
   },
 });
