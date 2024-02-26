@@ -1,6 +1,7 @@
-import { StyleSheet, Button, Image } from "react-native";
+import { StyleSheet, Image, Touchable, TouchableOpacity } from "react-native";
+import { Button, Card } from "react-native-paper";
 
-import { Text, View } from "@/src/components/Themed";
+import { ScrollView, Text, View } from "@/src/components/Themed";
 import { Link, useNavigation, useRouter } from "expo-router";
 import { useEffect } from "react";
 
@@ -16,19 +17,23 @@ export default function TabThreeScreen() {
     router.navigate("/TabThree/PostEvent");
   }
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../../../../assets/images/profileCover.png")}
-        style={styles.coverImage}
-      />
-      <Text style={styles.title}>My Events</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <Button title="Host an event!" onPress={goToPostEvent}></Button>
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImage}
+        />
+        <Text style={styles.title}> My Events</Text>
+
+        <Button
+          mode="contained"
+          onPress={goToPostEvent}
+          style={styles.postButton}
+        >
+          Host an Event!
+        </Button>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -36,11 +41,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    top: -200,
+    marginTop: -250,
+    marginBottom: -200,
   },
   title: {
-    fontSize: 20,
+    top: 10,
+    color: "white",
+    fontSize: 30,
     fontWeight: "bold",
+    alignSelf: "center",
+    justifyContent: "center",
   },
   separator: {
     marginVertical: 30,
@@ -50,7 +61,14 @@ const styles = StyleSheet.create({
   coverImage: {
     width: 700,
     height: 500,
-    top: -315,
-    borderRadius: 300,
+    top: 210,
+    borderRadius: 280,
+  },
+  postButton: {
+    top: 50,
+  },
+  postText: {
+    color: "white",
+    fontWeight: "500",
   },
 });

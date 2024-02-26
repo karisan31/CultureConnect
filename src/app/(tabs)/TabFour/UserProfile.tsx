@@ -1,13 +1,14 @@
-import { StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Text, View, ScrollView } from "@/src/components/Themed";
 import { Image } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { supabase } from "@/config/initSupabase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Loading from "@/src/components/Loading";
 import RemoteImage from "@/src/components/RemoteImage";
+import { Button } from "react-native-paper";
 
 export const defaultProfileImage =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png";
@@ -55,6 +56,10 @@ export default function ProfileDataScreen() {
     fetchProfileData();
   }, []);
 
+  const goToEditProfile = () => {
+    router.navigate(`/TabFour/EditProfile`);
+  };
+
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
@@ -74,11 +79,13 @@ export default function ProfileDataScreen() {
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
-        <Text style={[styles.viewProfileText, { zIndex: 1 }]}>My Profile</Text>
+        <Text style={[styles.viewProfileText, { zIndex: 1 }]}> My Profile</Text>
+
         <Image
           source={require("../../../../assets/images/profileCover.png")}
           style={styles.coverImage}
         />
+
         <RemoteImage
           path={profileData?.avatar_url}
           fallback={defaultProfileImage}
@@ -94,9 +101,13 @@ export default function ProfileDataScreen() {
 
         <Text style={styles.profileData}>{profileData?.email}</Text>
 
-        <Link href={"/TabFour/EditProfile"} style={styles.editProfile}>
-          <Text>Edit Profile</Text>
-        </Link>
+        <Button
+          mode="contained"
+          onPress={goToEditProfile}
+          style={styles.editProfile}
+        >
+          Edit Profile
+        </Button>
 
         <TouchableOpacity onPress={handleSignOut} style={styles.signOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
@@ -119,6 +130,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  separator: {
+    height: 1,
+    width: "80%",
   },
   coverImage: {
     width: 700,
@@ -165,11 +180,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     // top: -220,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
+  // separator: {
+  //   marginVertical: 30,
+  //   height: 1,
+  //   width: "80%",
+  // },
   profileImage: {
     width: 225,
     height: 225,
