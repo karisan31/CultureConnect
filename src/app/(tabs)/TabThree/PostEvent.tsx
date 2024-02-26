@@ -2,7 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
-import { StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+} from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import {
   DatePickerInput,
@@ -84,7 +90,7 @@ export default function PostEvent() {
       setLoading(false);
       setIsError(true);
     } else {
-      console.log(newEvent)
+      console.log(newEvent);
       setLoading(false);
       router.navigate("/TabThree/MyEvents");
     }
@@ -175,148 +181,155 @@ export default function PostEvent() {
   };
 
   return (
-    <View style={[styles.container, { display: "flex" }]}>
-      <Spinner visible={loading} />
+    <ScrollView>
+      <View style={[styles.container, { display: "flex" }]}>
+        <Spinner visible={loading} />
 
-      <Text style={[styles.header, { margin: 5 }]}>Host an Event!</Text>
-      {isError ? (
-        <Text style={[styles.label, { color: "red" }]}>
-          Ensure all required fields are completed!
-        </Text>
-      ) : null}
-      <Text style={[styles.label, { color: "red" }]}>
-        Title, location, date, and time are required.
-      </Text>
-      <TextInput
-        placeholder="Event Title"
-        value={title}
-        onChangeText={setTitle}
-        mode="outlined"
-      />
-      <TextInput
-        placeholder="Address"
-        value={address}
-        onChangeText={setAddress}
-        mode="outlined"
-      />
-      {postcodeError ? (
-        <Text style={[styles.label, { color: "red" }]}>
-          Please enter a valid postcode
-        </Text>
-      ) : null}
-      <TextInput
-        placeholder="Postcode"
-        value={postcode}
-        onChangeText={setPostcode}
-        mode="outlined"
-      />
-
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          backgroundColor: "transparent",
-          maxHeight: 70,
-        }}
-      >
-        <DatePickerInput
-          withDateFormatInLabel={false}
-          presentationStyle="pageSheet"
-          locale="en-GB"
-          placeholder="DD/MM/YYYY"
-          value={inputDate}
-          onChange={onDateChange}
-          inputMode="start"
-          style={{ width: 180 }}
-          mode="outlined"
-        />
-        <View
-          style={{
-            justifyContent: "center",
-            flex: 1,
-            alignItems: "center",
-            backgroundColor: "transparent",
-          }}
-        >
-          <Text style={{ marginBottom: 5, marginTop: 5 }}>
-            Time: {timeHours < 10 ? `0${timeHours}` : timeHours}:
-            {timeMinutes < 10 ? `0${timeMinutes}` : timeMinutes}
+        <Text style={[styles.header, { margin: 5 }]}>Host an Event!</Text>
+        {isError ? (
+          <Text style={[styles.label, { color: "red" }]}>
+            Ensure all required fields are completed!
           </Text>
-          <Button
-            onPress={() => setVisible(true)}
-            uppercase={false}
-            mode="outlined"
-            style={{
-              backgroundColor: "white",
-              borderRadius: 5,
-              height: 40,
-            }}
-          >
-            Pick time
-          </Button>
-          <TimePickerModal
-            visible={visible}
-            onDismiss={onDismiss}
-            onConfirm={onConfirm}
-            hours={0}
-            minutes={0}
-          />
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
+        ) : null}
+        <Text style={[styles.label, { color: "red" }]}>
+          Title, location, date, and time are required.
+        </Text>
         <View>
           <TextInput
-            placeholder="Max attendees"
-            value={maxAttendees}
-            onChangeText={setMaxAttendees}
+            placeholder="Event Title"
+            value={title}
+            onChangeText={setTitle}
             mode="outlined"
-            style={{ width: 150 }}
           />
+        </View>
+        <View>
           <TextInput
-            placeholder="Description"
-            value={description}
-            onChangeText={setDescription}
-            multiline
+            placeholder="Address"
+            value={address}
+            onChangeText={setAddress}
             mode="outlined"
-            style={{
-              marginTop: 5,
-              height: 200,
-              maxWidth: 150,
-              overflow: "scroll",
-            }}
           />
         </View>
-
-        <View style={styles.container}>
-          {file ? (
-            <View style={[styles.imageContainer, { maxWidth: 150 }]}>
-              <Image source={{ uri: file }} style={styles.image} />
-            </View>
-          ) : (
-            <Text style={styles.errorText}>{error}</Text>
-          )}
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { height: 50, width: 150, alignSelf: "flex-end" },
-            ]}
-            onPress={pickImage}
-          >
-            <Text style={styles.buttonText}>Choose Image</Text>
-          </TouchableOpacity>
+        {postcodeError ? (
+          <Text style={[styles.label, { color: "red" }]}>
+            Please enter a valid postcode
+          </Text>
+        ) : null}
+        <View>
+          <TextInput
+            placeholder="Postcode"
+            value={postcode}
+            onChangeText={setPostcode}
+            mode="outlined"
+          />
         </View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            backgroundColor: "transparent",
+            maxHeight: 70,
+          }}
+        >
+          <DatePickerInput
+            withDateFormatInLabel={false}
+            presentationStyle="pageSheet"
+            locale="en-GB"
+            placeholder="DD/MM/YYYY"
+            value={inputDate}
+            onChange={onDateChange}
+            inputMode="start"
+            style={{ width: 180 }}
+            mode="outlined"
+          />
+          <View
+            style={{
+              justifyContent: "center",
+              flex: 1,
+              alignItems: "center",
+              backgroundColor: "transparent",
+            }}
+          >
+            <Text style={{ marginBottom: 5, marginTop: 5 }}>
+              Time: {timeHours < 10 ? `0${timeHours}` : timeHours}:
+              {timeMinutes < 10 ? `0${timeMinutes}` : timeMinutes}
+            </Text>
+            <Button
+              onPress={() => setVisible(true)}
+              uppercase={false}
+              mode="outlined"
+              style={{
+                backgroundColor: "white",
+                borderRadius: 5,
+                height: 40,
+              }}
+            >
+              Pick time
+            </Button>
+            <TimePickerModal
+              visible={visible}
+              onDismiss={onDismiss}
+              onConfirm={onConfirm}
+              hours={0}
+              minutes={0}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <View>
+            <TextInput
+              placeholder="Max attendees"
+              value={maxAttendees}
+              onChangeText={setMaxAttendees}
+              mode="outlined"
+              style={{ width: 150 }}
+            />
+            <TextInput
+              placeholder="Description"
+              value={description}
+              onChangeText={setDescription}
+              multiline
+              mode="outlined"
+              style={{
+                marginTop: 5,
+                height: 200,
+                maxWidth: 150,
+                overflow: "scroll",
+              }}
+            />
+          </View>
+
+          <View style={styles.container}>
+            {file ? (
+              <View style={[styles.imageContainer, { maxWidth: 150 }]}>
+                <Image source={{ uri: file }} style={styles.image} />
+              </View>
+            ) : (
+              <Text style={styles.errorText}>{error}</Text>
+            )}
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { height: 50, width: 150, alignSelf: "flex-end" },
+              ]}
+              onPress={pickImage}
+            >
+              <Text style={styles.buttonText}>Choose Image</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Button
+          children="Submit"
+          mode="outlined"
+          style={{ backgroundColor: "white", bottom: -5 }}
+          onPress={handleSubmit}
+        ></Button>
       </View>
-      <Button
-        children="Submit"
-        mode="outlined"
-        style={{ backgroundColor: "white", bottom: -5 }}
-        onPress={handleSubmit}
-      ></Button>
-    </View>
+    </ScrollView>
   );
 }
 
