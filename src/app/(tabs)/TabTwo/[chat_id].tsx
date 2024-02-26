@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
+    bottom: -5,
     flexDirection: "row",
     padding: 10,
     gap: 10,
