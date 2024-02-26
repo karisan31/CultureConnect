@@ -11,7 +11,7 @@ import RemoteImage from "@/src/components/RemoteImage";
 import { Button } from "react-native-paper";
 
 export const defaultProfileImage =
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png";
+  "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
 interface ProfileData {
   avatar_url: string;
   first_name: string;
@@ -152,18 +152,15 @@ const styles = StyleSheet.create({
   editProfile: {
     marginTop: 10,
     marginBottom: 10,
-    // top: -200,
     textDecorationLine: "underline",
   },
   profileData: {
     padding: 10,
-    // top: -220,
     fontSize: 18,
     marginBottom: 30,
   },
   bio: {
     padding: 20,
-    // top: -230,
     fontSize: 20,
     fontWeight: "bold",
     alignSelf: "center",
@@ -178,26 +175,18 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     marginBottom: 20,
-    // top: -220,
   },
-  // separator: {
-  //   marginVertical: 30,
-  //   height: 1,
-  //   width: "80%",
-  // },
   profileImage: {
     width: 225,
     height: 225,
     alignSelf: "center",
     borderRadius: 125,
     marginBottom: 20,
-    // top: -220,
   },
   signOut: {
     padding: 15,
     backgroundColor: "#50C878",
     borderRadius: 25,
-    // top: -200,
   },
   signOutText: {
     color: "white",
