@@ -1,15 +1,14 @@
 import {
   Alert,
-  View,
   Button,
   TextInput,
   StyleSheet,
-  Text,
   TouchableOpacity,
   Image,
-  ScrollView,
 } from "react-native";
 import { useState } from "react";
+import { Text, View, ScrollView } from "@/src/components/Themed";
+
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
@@ -135,7 +134,7 @@ const Login = () => {
         onPress={toggleShowPassword}
       />
       <TouchableOpacity onPress={onSignInPress} style={styles.button}>
-        <Text style={{ color: "#fff" }}>Sign in</Text>
+        <Text style={{ color: "#fff", fontSize: 20 }}>Sign in</Text>
       </TouchableOpacity>
       <Button onPress={onCreateAccount} title="Create Account"></Button>
     </ScrollView>
@@ -215,13 +214,11 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
     paddingTop: 90,
     padding: 20,
-    backgroundColor: "#151515",
   },
   header: {
     fontSize: 30,
     textAlign: "center",
     margin: 50,
-    color: "#fff",
   },
   inputField: {
     marginVertical: 4,
@@ -230,8 +227,6 @@ const styles = StyleSheet.create({
     borderColor: "#2b825b",
     borderRadius: 4,
     padding: 10,
-    color: "#fff",
-    backgroundColor: "#363636",
   },
   button: {
     marginVertical: 15,
@@ -242,7 +237,6 @@ const styles = StyleSheet.create({
   },
   imageUploadButton: {
     margin: 10,
-    color: "white",
     alignSelf: "center",
     fontWeight: "bold",
   },
