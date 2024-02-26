@@ -8,10 +8,8 @@ import Loading from "@/src/components/Loading";
 import { useLocation } from "../../../components/LocationContext";
 import { defaultPartyImage } from "@/src/components/EventCard";
 import RemoteImage from "@/src/components/RemoteImage";
-import { useNavigation } from '@react-navigation/native';
-
-
-
+import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 
 interface Event {
   date: string;
@@ -37,7 +35,7 @@ export default function Map() {
   });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setIsLoading(true);
@@ -50,6 +48,10 @@ export default function Map() {
       }
     });
   }, []);
+
+  function goToEvent(event_id: number) {
+    router.navigate(`./${event_id}`)
+  }
 
   if (isLoading) {
     return <Loading />;
@@ -66,36 +68,38 @@ export default function Map() {
           showsMyLocationButton
         >
           {events.map((event) => {
+            const eventDate = new Date(event.date);
 
-  const eventDate = new Date(event.date);
-
-  const readableDate = eventDate.toLocaleString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  });
+            const readableDate = eventDate.toLocaleString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              hour12: true,
+            });
             return (
               <Marker
                 key={event.event_id}
                 coordinate={{
-                  latitude: event.location.latitude,
-                  longitude: event.location.longitude,
+                  latitude: event.location.latitude
+                    ? event.location.latitude
+                    : 0,
+                  longitude: event.location.longitude
+                    ? event.location.longitude
+                    : 0,
                 }}
               >
-                <Callout style={styles.container} >
-                  <View style={styles.calloutContainer }>
+                <Callout style={styles.container} onPress={()=>{goToEvent(event.event_id)}}>
+                  <View style={styles.calloutContainer}>
                     <Text style={styles.calloutText}>{event.title}</Text>
-                      <RemoteImage
-                          path={event.image}
-                          fallback={defaultPartyImage}
-                          style={styles.image}
-                          bucket="event_images"
-                        />
-                        <Text style={styles.date}>{readableDate}</Text>
-                       
+                    <RemoteImage
+                      path={event.image}
+                      fallback={defaultPartyImage}
+                      style={styles.image}
+                      bucket="event_images"
+                    />
+                    <Text style={styles.date}>{readableDate}</Text>
                   </View>
                 </Callout>
               </Marker>
@@ -117,16 +121,16 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   calloutContainer: {
-    flexDirection: "column", 
+    flexDirection: "column",
     alignItems: "center",
     padding: 10,
     backgroundColor: "white",
-    width: 200, 
+    width: 200,
   },
   calloutText: {
     fontSize: 16,
     color: "black",
-    marginBottom: 5, 
+    marginBottom: 5,
   },
   image: {
     width: 50,
@@ -139,4 +143,3 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 });
-

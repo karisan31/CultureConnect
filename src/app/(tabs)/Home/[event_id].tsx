@@ -53,6 +53,7 @@ export default function EventDetails() {
               }
             });
         } else {
+          setIsLoading(false);
           setErr(error);
         }
       });
