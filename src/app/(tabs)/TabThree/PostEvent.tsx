@@ -2,13 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
-import {
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Alert,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import {
   DatePickerInput,
@@ -17,7 +11,7 @@ import {
   registerTranslation,
 } from "react-native-paper-dates";
 registerTranslation("en-GB", enGB);
-import { Text, View } from "@/src/components/Themed";
+import { Text, View, ScrollView } from "@/src/components/Themed";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
