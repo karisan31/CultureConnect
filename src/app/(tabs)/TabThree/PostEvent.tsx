@@ -11,22 +11,18 @@ import {
   registerTranslation,
 } from "react-native-paper-dates";
 registerTranslation("en-GB", enGB);
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Text, View } from "@/src/components/Themed";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import { randomUUID } from "expo-crypto";
 import { decode } from "base64-arraybuffer";
-import * as Location from "expo-location";
 
 export default function PostEvent() {
   const [title, setTitle] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [locationObject, setLocationObject] = useState({
-    latitude: "-29.2434067",
-    longitude: "-51.1985995",
-  });
+  const [postcode, setPostcode] = useState<string>("");
+  const [postcodeError, setPostcodeError] = useState<boolean>(false);
+  const [locationObject, setLocationObject] = useState<object | null>(null);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [maxAttendees, setMaxAttendees] = useState<string | undefined>(
     undefined
@@ -34,6 +30,7 @@ export default function PostEvent() {
   const [description, setDescription] = useState<string | undefined>(undefined);
   const [image, setImage] = useState<string | undefined>(undefined);
   const [hostId, setHostId] = useState<string | undefined>(undefined);
+  const [address, setAddress] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputDate, setInputDate] = useState<Date | undefined>(undefined);
   const [visible, setVisible] = useState<boolean>(false);
@@ -44,58 +41,53 @@ export default function PostEvent() {
   const [isError, setIsError] = useState<boolean>(false);
   const router = useRouter();
 
-  const fetchData = () => {
-    supabase.auth.getUser().then((user) => {
-      setHostId(user.data.user?.id);
-    });
+  const fetchData = async () => {
+    const user = await supabase.auth.getUser();
+    setHostId(user.data.user?.id);
   };
 
   useEffect(() => {
     fetchData();
-
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
     setIsError(false);
     geoCode();
-    uploadImage()
-      .then((imagePath) => {
-        date?.setHours(timeHours);
-        date?.setMinutes(date.getMinutes() + timeMinutes);
-        if (isNaN(Number(maxAttendees))) {
-          setMaxAttendees(undefined);
-        }
-        if (description?.length === 0) {
-          setDescription(undefined);
-        }
-        if (imagePath?.length === 0) {
-          setImage(undefined);
-        } else {
-          setImage(imagePath);
-        }
-      })
-      .then(() => {
-        const newEvent = {
-          title: title,
-          location: locationObject,
-          date: date,
-          host_id: hostId,
-          max_attendees: maxAttendees,
-          description: description,
-          image: image,
-        };
-        return supabase.from("events").insert([newEvent]).select();
-      })
-      .then((result) => {
-        if (result.error) {
-          setLoading(false);
-          setIsError(true);
-        } else {
-          setLoading(false);
-          router.navigate("/TabThree/MyEvents");
-        }
-      });
+    const imagePath = await uploadImage();
+    date?.setHours(timeHours);
+    date?.setMinutes(date.getMinutes() + timeMinutes);
+    if (isNaN(Number(maxAttendees))) {
+      setMaxAttendees(undefined);
+    }
+    if (description?.length === 0) {
+      setDescription(undefined);
+    }
+    if (imagePath?.length === 0) {
+      setImage(undefined);
+    } else {
+      setImage(imagePath);
+    }
+    const newEvent = {
+      title: title,
+      address: address,
+      location: locationObject,
+      date: date,
+      host_id: hostId,
+      max_attendees: maxAttendees,
+      description: description,
+      image: image,
+    };
+    const result = await supabase.from("events").insert([newEvent]).select();
+
+    if (result.error) {
+      setLoading(false);
+      setIsError(true);
+    } else {
+      console.log(newEvent)
+      setLoading(false);
+      router.navigate("/TabThree/MyEvents");
+    }
   };
 
   const onDismiss = useCallback(() => {
@@ -168,8 +160,18 @@ export default function PostEvent() {
   };
 
   const geoCode = async () => {
-    const geocodedLocation = await Location.geocodeAsync(location);
-    console.log(geocodedLocation);
+    const response = await fetch(
+      `https://api.postcodes.io/postcodes/${postcode}`
+    );
+    const locationData = await response.json();
+    if (!locationData.error) {
+      setLocationObject({
+        latitude: locationData.result.latitude,
+        longitude: locationData.result.longitude,
+      });
+    } else {
+      setPostcodeError(true);
+    }
   };
 
   return (
@@ -182,20 +184,30 @@ export default function PostEvent() {
           Ensure all required fields are completed!
         </Text>
       ) : null}
-      <Text style={[styles.label, { color: "pink" }]}>
+      <Text style={[styles.label, { color: "red" }]}>
         Title, location, date, and time are required.
       </Text>
       <TextInput
-        placeholder="Title"
+        placeholder="Event Title"
         value={title}
         onChangeText={setTitle}
         mode="outlined"
       />
-
       <TextInput
-        placeholder="Location"
-        value={location}
-        onChangeText={setLocation}
+        placeholder="Address"
+        value={address}
+        onChangeText={setAddress}
+        mode="outlined"
+      />
+      {postcodeError ? (
+        <Text style={[styles.label, { color: "red" }]}>
+          Please enter a valid postcode
+        </Text>
+      ) : null}
+      <TextInput
+        placeholder="Postcode"
+        value={postcode}
+        onChangeText={setPostcode}
         mode="outlined"
       />
 
@@ -316,13 +328,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     padding: 20,
-    backgroundColor: "#151515",
   },
   header: {
     fontSize: 30,
     textAlign: "center",
     margin: 50,
-    color: "#fff",
   },
   inputField: {
     marginVertical: 4,
@@ -331,8 +341,6 @@ const styles = StyleSheet.create({
     borderColor: "#2b825b",
     borderRadius: 4,
     padding: 10,
-    color: "#fff",
-    backgroundColor: "#363636",
   },
   button: {
     marginVertical: 15,
