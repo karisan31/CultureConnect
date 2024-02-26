@@ -75,6 +75,7 @@ export default function ChatCard({ chat }: Props): JSX.Element {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          maxWidth: "90%",
         }}
       >
         <Text variant="bodyMedium">Chat with: {otherUser}</Text>

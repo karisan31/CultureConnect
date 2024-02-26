@@ -1,5 +1,6 @@
 import { Card } from "react-native-paper";
 import { Text, View } from "./Themed";
+import { StyleSheet } from "react-native";
 interface Chat {
   id: number;
   content: string;
@@ -17,3 +18,17 @@ export default function MessagesCard({ chat }: MessagesCardProps) {
     </Card>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 8,
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+});
