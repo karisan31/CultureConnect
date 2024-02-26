@@ -11,7 +11,7 @@ import RemoteImage from "@/src/components/RemoteImage";
 import { Button } from "react-native-paper";
 
 export const defaultProfileImage =
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png";
+  "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
 interface ProfileData {
   avatar_url: string;
   first_name: string;
