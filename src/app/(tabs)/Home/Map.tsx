@@ -6,6 +6,12 @@ import { Text } from "@/src/components/Themed";
 import { fetchEvents } from "@/src/Utils/api";
 import Loading from "@/src/components/Loading";
 import { useLocation } from "../../../components/LocationContext";
+import { defaultPartyImage } from "@/src/components/EventCard";
+import RemoteImage from "@/src/components/RemoteImage";
+import { useNavigation } from '@react-navigation/native';
+
+
+
 
 interface Event {
   date: string;
@@ -60,6 +66,17 @@ export default function Map() {
           showsMyLocationButton
         >
           {events.map((event) => {
+
+  const eventDate = new Date(event.date);
+
+  const readableDate = eventDate.toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
             return (
               <Marker
                 key={event.event_id}
@@ -68,9 +85,17 @@ export default function Map() {
                   longitude: event.location.longitude,
                 }}
               >
-                <Callout>
-                  <View style={{ padding: 5 }}>
-                    <Text style={{ fontSize: 15 }}>{event.title}</Text>
+                <Callout style={styles.container} >
+                  <View style={styles.calloutContainer }>
+                    <Text style={styles.calloutText}>{event.title}</Text>
+                      <RemoteImage
+                          path={event.image}
+                          fallback={defaultPartyImage}
+                          style={styles.image}
+                          bucket="event_images"
+                        />
+                        <Text style={styles.date}>{readableDate}</Text>
+                       
                   </View>
                 </Callout>
               </Marker>
@@ -91,4 +116,27 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  calloutContainer: {
+    flexDirection: "column", 
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "white",
+    width: 200, 
+  },
+  calloutText: {
+    fontSize: 16,
+    color: "black",
+    marginBottom: 5, 
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  date: {
+    fontSize: 10,
+    color: "black",
+    marginLeft: 10,
+  },
 });
+
