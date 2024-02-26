@@ -9,7 +9,7 @@ export default function Homepage() {
     router.navigate("/(tabs)/Home/Map");
   }
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <Image
           source={require("../../../../assets/images/profileCover.png")}
