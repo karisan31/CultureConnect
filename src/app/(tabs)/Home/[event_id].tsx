@@ -7,18 +7,22 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 import { Image, StyleSheet } from "react-native";
 import RemoteImage from "@/src/components/RemoteImage";
+import { supabase } from "@/config/initSupabase";
 
 export default function EventDetails() {
   const { event_id } = useLocalSearchParams();
   const [eventData, setEventData] = useState<any | null>(null);
   const [err, setErr] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [host, setHost] = useState<string>("");
 
   useEffect(() => {
     fetchEventByID(event_id).then(({ data, error }) => {
       if (data) {
         setIsLoading(false);
         setEventData(data);
+        supabase.from("profiles").select("*");
+        console.log(data)
       } else {
         setErr(error);
       }
@@ -63,9 +67,17 @@ export default function EventDetails() {
           />
         </View>
         <View style={styles.container}>
-          <Text style={styles.title}>Date: {readableDate}</Text>
-          <Text>Event Size: {eventData[0].max_attendees}</Text>
-          <Text>{eventData[0].description}</Text>
+          <Text style={styles.title}>Host: </Text>
+          <Text> {host}</Text>
+          <Text style={styles.title}>Date: </Text>
+          <Text> {readableDate}</Text>
+          <Text style={styles.title}>Location:</Text>
+          <Text> {eventData[0].address}</Text>
+          <Text style={styles.title}>
+            Maximum attendees: {eventData[0].max_attendees}
+          </Text>
+          <Text style={styles.title}>Description:</Text>
+          <Text> {eventData[0].description}</Text>
         </View>
       </View>
     </>

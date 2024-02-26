@@ -21,6 +21,7 @@ type EventProps = {
 };
 
 export default function EventCard({ event }: EventProps) {
+  const [isAttending, setIsAttending] = React.useState<boolean>(false);
   const eventDate = new Date(event.date);
 
   function goToEventPage() {
@@ -45,11 +46,11 @@ export default function EventCard({ event }: EventProps) {
             lightColor="#eee"
             darkColor="rgba(255,255,255,0.1)"
           />
-          <Text variant="bodyMedium">{event.description}</Text>
+          {/* <Text variant="bodyMedium">{event.description}</Text> */}
           <Text variant="bodyMedium">{readableDate}</Text>
-          <Text variant="bodyMedium">
+          {/* <Text variant="bodyMedium">
             Max Attendees: {event.max_attendees || "N/A"}
-          </Text>
+          </Text> */}
         </Card.Content>
         <RemoteImage
           path={event.image}
@@ -68,7 +69,7 @@ export default function EventCard({ event }: EventProps) {
         />
         <Card.Actions>
           <Button onPress={goToEventPage}>More Info</Button>
-          <Button>Going!</Button>
+          {isAttending ? <Button style={{backgroundColor: "pink"}} onPress={()=>{setIsAttending(false)}}>Cancel</Button> : <Button onPress={()=>{setIsAttending(true)}}>Going!</Button>}
         </Card.Actions>
       </Card>
     </View>
