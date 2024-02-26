@@ -68,13 +68,9 @@ export default function chatRoom() {
   return (
     <>
       <Stack.Screen options={{ title: `Chatting with: ` }} />
-      <View style={styles.container}>
-        <Text style={styles.title}>Messages</Text>
-        <View style={styles.separator} />
-        {messageData.map((chat) => (
-          <MessagesCard key={chat.id} chat={chat} />
-        ))}
-      </View>
+      {messageData.map((chat) => (
+        <MessagesCard key={chat.id} chat={chat} />
+      ))}
     </>
   );
 }
