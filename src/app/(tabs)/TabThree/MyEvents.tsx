@@ -102,8 +102,8 @@ export default function TabThreeScreen() {
           source={require("../../../../assets/images/profileCover.png")}
           style={styles.coverImage}
         />
-        <Text style={styles.title}> My Events</Text>
-
+        <Text style={styles.title}>My Events</Text>
+        <View style={styles.separator} />
         <Button
           mode="contained"
           onPress={goToPostEvent}
@@ -145,12 +145,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    top: -200,
     marginTop: -250,
     marginBottom: -25,
   },
   title: {
-    top: 10,
+    bottom: 165,
     color: "white",
     fontSize: 30,
     fontWeight: "bold",
@@ -163,19 +162,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
   coverImage: {
     width: 700,
     height: 500,
-    top: 210,
+    top: 10,
     borderRadius: 280,
   },
   postButton: {
-    top: 50,
+    bottom: 125,
   },
   postText: {
     color: "white",
@@ -192,5 +186,12 @@ const styles = StyleSheet.create({
     aspectRatio: 1.5,
     borderRadius: 20,
     marginVertical: 10,
+  separator: {
+    marginTop: 30,
+    marginBottom: -25,
+    height: 1,
+    width: "80%",
+    bottom: 190,
+    backgroundColor: "rgba(255,255,255,0.1)",
   },
 });

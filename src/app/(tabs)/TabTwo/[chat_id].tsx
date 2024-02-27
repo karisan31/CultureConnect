@@ -1,6 +1,9 @@
 import { supabase } from "@/config/initSupabase";
-import { fetchChatMessagesByChatId, useCurrentUser } from "@/src/Utils/api";
-import Loading from "@/src/components/Loading";
+import {
+  fetchChatById,
+  fetchChatMessagesByChatId,
+  useCurrentUser,
+} from "@/src/Utils/api";
 import MessagesCard from "@/src/components/MessagesCard";
 import RemoteImage from "@/src/components/RemoteImage";
 import { ScrollView, View } from "@/src/components/Themed";
@@ -14,12 +17,20 @@ import {
 } from "react-native";
 import { TextInput } from "react-native";
 import { defaultProfileImage } from "../TabFour/UserProfile";
+import Spinner from "react-native-loading-spinner-overlay";
 
 interface Message {
-  id: number;
+  chat_id: string | string[];
+  id: any;
   content: string;
   author_id: string;
+  created_at: string;
 }
+
+interface CurrentUser {
+  id: string;
+}
+
 interface ProfileData {
   avatar_url: string;
   first_name: string;
@@ -27,31 +38,46 @@ interface ProfileData {
   email: string;
   bio: string;
 }
-export default function chatRoom() {
+
+export default function ChatRoom() {
   const { chat_id } = useLocalSearchParams();
   const [messageData, setMessageData] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const currentUser = useCurrentUser();
   const [message, setMessage] = useState<string>("");
-  const [otherUser, setOtherUser] = useState("");
+  const [otherUser, setOtherUser] = useState<string>("");
   const [otherUserProfileData, setOtherUserProfileData] =
     useState<ProfileData | null>(null);
 
   useEffect(() => {
-    const uniqueUserIds = [
-      ...new Set(messageData.map((message) => message.author_id)),
-    ];
-    const otherUserId = uniqueUserIds.find(
-      (userId) => userId !== currentUser?.id
-    );
-    setOtherUser(otherUserId);
-  }, [currentUser, messageData]);
+    const fetchMessagesAndChat = async () => {
+      setIsLoading(true);
+      try {
+        const messages = await fetchChatMessagesByChatId(chat_id);
+        setMessageData(messages || []);
+
+        const chatUsers = await fetchChatById(chat_id);
+        const uniqueUserIds = [
+          ...new Set(messages?.map((message) => message.author_id)),
+        ];
+        const otherUserId = uniqueUserIds.find(
+          (userId) => userId !== (currentUser! as CurrentUser)?.id
+        );
+
+        setOtherUser(otherUserId || "");
+        setIsLoading(false);
+      } catch (error: any) {
+        console.error("Error fetching messages or chat:", error.message);
+        setIsLoading(false);
+      }
+    };
+
+    fetchMessagesAndChat();
+  }, [chat_id, currentUser]);
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      if (!otherUser) {
-        return; // If otherUser is undefined, return early
-      }
+      if (!otherUser) return;
 
       try {
         const { data, error } = await supabase
@@ -60,14 +86,9 @@ export default function chatRoom() {
           .eq("id", otherUser)
           .single();
 
-        if (error) {
-          throw error;
-        }
-
-        if (data) {
-          setOtherUserProfileData(data);
-        }
-      } catch (error) {
+        if (error) throw error;
+        if (data) setOtherUserProfileData(data);
+      } catch (error: any) {
         console.error("Error fetching profile data:", error.message);
       }
     };
@@ -75,47 +96,14 @@ export default function chatRoom() {
     fetchProfileData();
   }, [otherUser]);
 
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchMessages = async () => {
-      try {
-        const messages = await fetchChatMessagesByChatId(chat_id);
-        setMessageData(messages || []);
-        setIsLoading(false);
-      } catch (error: any) {
-        console.error("Error fetching messages:", error.message);
-      }
-    };
-    async function fetchChatById(chatId: any) {
-      try {
-        const { data, error } = await supabase
-          .from("chat_users")
-          .select("*")
-          .eq("chats_id", chatId);
-        if (error) {
-          throw error;
-        }
-        return data;
-      } catch (error: any) {
-        console.error("Error fetching chat:", error.message);
-        return null;
-      }
-    }
-    fetchMessages();
-    fetchChatById(chat_id);
-  }, [chat_id]);
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
   const sendMessage = async () => {
     const msg: string = message.trim();
     if (msg.length === 0) return;
 
     const newMessage: Message = {
+      id: Date.now(),
       chat_id: chat_id,
-      author_id: currentUser?.id,
+      author_id: (currentUser! as CurrentUser)?.id || "",
       content: msg,
       created_at: new Date().toISOString(),
     };
@@ -128,19 +116,10 @@ export default function chatRoom() {
         .from("messages")
         .insert([newMessage]);
 
-      if (error) {
-        console.error("Error adding message:", error.message);
-
-        setMessageData((prevState) =>
-          prevState.filter((item) => item.id !== newMessage.id)
-        );
-        setMessage(msg);
-      } else {
-        console.log("Message added successfully:", { data });
-      }
+      if (error) throw error;
+      console.log("Message added successfully:");
     } catch (error: any) {
-      console.error("Error sending message:", error.message);
-
+      console.error("Error adding message:", error.message);
       setMessageData((prevState) =>
         prevState.filter((item) => item.id !== newMessage.id)
       );
@@ -150,9 +129,10 @@ export default function chatRoom() {
 
   return (
     <>
+      <Spinner visible={isLoading} />
       <Stack.Screen
         options={{
-          title: `Chatting with: ${otherUserProfileData?.first_name} ${otherUserProfileData?.second_name} `,
+          title: `Chatting with: ${otherUserProfileData?.first_name} ${otherUserProfileData?.second_name}`,
           headerRight: () => (
             <View style={styles.headerRightContainer}>
               <RemoteImage
@@ -221,13 +201,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 10,
-  },
-  userMessageContainer: {
-    backgroundColor: "#dcf8c6",
-    alignSelf: "flex-end",
-  },
-  otherMessageContainer: {
-    backgroundColor: "#fff",
   },
   profileImage: {
     width: 25,

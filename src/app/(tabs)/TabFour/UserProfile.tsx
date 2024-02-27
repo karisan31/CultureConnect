@@ -78,29 +78,24 @@ export default function ProfileDataScreen() {
 
   return (
     <ScrollView>
-      <SafeAreaView style={styles.container}>
-        <Text style={[styles.viewProfileText, { zIndex: 1 }]}> My Profile</Text>
-
+      <View style={styles.container}>
         <Image
           source={require("../../../../assets/images/profileCover.png")}
           style={styles.coverImage}
         />
-
+        <Text style={[styles.viewProfileText, { zIndex: 1 }]}>Profile</Text>
+        <View style={styles.separator} />
         <RemoteImage
           path={profileData?.avatar_url}
           fallback={defaultProfileImage}
           style={styles.profileImage}
           bucket="avatars"
         />
-
         <Text style={styles.name}>
           {profileData?.first_name} {profileData?.second_name}
         </Text>
-
         <Text style={styles.bio}>{profileData?.bio}</Text>
-
         <Text style={styles.profileData}>{profileData?.email}</Text>
-
         <Button
           mode="contained"
           onPress={goToEditProfile}
@@ -108,11 +103,10 @@ export default function ProfileDataScreen() {
         >
           Edit Profile
         </Button>
-
         <TouchableOpacity onPress={handleSignOut} style={styles.signOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
-      </SafeAreaView>
+      </View>
     </ScrollView>
   );
 }
@@ -121,28 +115,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
-    top: -200,
     marginTop: -250,
-    marginBottom: -200,
+    marginBottom: -75,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  separator: {
-    height: 1,
-    width: "80%",
-  },
   coverImage: {
     width: 700,
     height: 500,
-    top: 115,
+    top: 10,
     borderRadius: 280,
   },
   viewProfileText: {
-    top: 450,
+    bottom: 165,
     color: "white",
     fontSize: 30,
     fontWeight: "bold",
@@ -152,16 +140,18 @@ const styles = StyleSheet.create({
   editProfile: {
     marginTop: 10,
     marginBottom: 10,
-    textDecorationLine: "underline",
+    top: -140,
   },
   profileData: {
     padding: 10,
     fontSize: 18,
+    top: -140,
     marginBottom: 30,
   },
   bio: {
     padding: 20,
     fontSize: 20,
+    top: -140,
     fontWeight: "bold",
     alignSelf: "center",
   },
@@ -174,6 +164,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 40,
     fontWeight: "bold",
+    top: -140,
     marginBottom: 20,
   },
   profileImage: {
@@ -181,15 +172,25 @@ const styles = StyleSheet.create({
     height: 225,
     alignSelf: "center",
     borderRadius: 125,
+    top: -140,
     marginBottom: 20,
   },
   signOut: {
     padding: 15,
+    top: -135,
     backgroundColor: "#50C878",
     borderRadius: 25,
   },
   signOutText: {
     color: "white",
     fontWeight: "500",
+  },
+  separator: {
+    marginTop: 30,
+    marginBottom: -25,
+    height: 1,
+    width: "80%",
+    bottom: 190,
+    backgroundColor: "rgba(255,255,255,0.1)",
   },
 });
