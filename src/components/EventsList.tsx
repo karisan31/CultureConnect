@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { fetchEvents } from "../Utils/api";
 import Loading from "./Loading";
@@ -8,6 +8,7 @@ import { useLocation } from "./LocationContext";
 import { insideCircle } from "geolocation-utils";
 import { Button, TextInput } from "react-native-paper";
 import { Text } from "./Themed";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function EventsList() {
   const [eventsData, setEventsData] = useState<any[]>([]);
@@ -63,14 +64,18 @@ export default function EventsList() {
         <Loading />
       ) : (
         <>
-          <View>
+        <Text>Enter postcode to find nearest events</Text>
+          <View style={styles.postcodeContainer}>
             <TextInput
               placeholder="Postcode"
               value={postcode}
               onChangeText={setPostcode}
               mode="outlined"
+              style={styles.postcodeSearch}
             />
-            <Button children="Search" onPress={HandleSearch} />
+            <Button onPress={HandleSearch} mode="contained" style={styles.searchButton}>
+              <FontAwesome5 name="search-location" size={20} />
+            </Button>
           </View>
           {postcodeError ? (
             <Text style={[styles.label, { color: "red" }]}>
@@ -109,4 +114,14 @@ const styles = StyleSheet.create({
     width: "125%",
     alignSelf: "center",
   },
+  postcodeContainer: {
+    flexDirection: "row"
+  },
+  postcodeSearch:{
+    flex: 1,
+  },
+  searchButton: {
+    alignSelf: "center",
+    marginLeft: 15
+  }
 });

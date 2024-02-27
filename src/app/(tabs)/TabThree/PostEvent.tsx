@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import { randomUUID } from "expo-crypto";
 import { decode } from "base64-arraybuffer";
+import { Stack } from "expo-router";
 
 export default function PostEvent() {
   const [title, setTitle] = useState<string>("");
@@ -178,6 +179,7 @@ export default function PostEvent() {
 
   return (
     <ScrollView>
+      <Stack.Screen options={{ title: "Host Event" }} />
       <View style={[styles.container, { display: "flex" }]}>
         <Spinner visible={loading} />
 
