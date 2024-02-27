@@ -68,7 +68,7 @@ export default function Messages(): JSX.Element {
         <Text style={styles.title}>Messages</Text>
         <View style={styles.separator} />
         <Spinner visible={isLoading} />
-        <View style={styles.container}>
+        <View style={styles.chatContainer}>
           {allChats.map((chat) => (
             <ChatCard key={chat.id} chat={chat} />
           ))}
@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    //justifyContent: "center",
     marginTop: -250,
   },
   title: {
@@ -105,5 +104,9 @@ const styles = StyleSheet.create({
     width: "80%",
     bottom: 190,
     backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  chatContainer: {
+    flex: 1,
+    alignItems: "center",
   },
 });
