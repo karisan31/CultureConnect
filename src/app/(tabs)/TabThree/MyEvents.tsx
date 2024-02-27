@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   eventsText: {
-    top: 150,
+    top: -30,
     fontSize: 30,
     fontWeight: "bold",
     alignSelf: "center",
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   eventCard: {
-    top: 160,
+    top: -20,
     marginVertical: 10,
     marginHorizontal: 20,
   },
