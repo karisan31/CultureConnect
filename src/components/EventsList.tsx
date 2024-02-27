@@ -1,4 +1,5 @@
-import { View, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
+import Slider from '@react-native-community/slider';
 import { useEffect, useState } from "react";
 import { fetchEvents } from "../Utils/api";
 import Loading from "./Loading";
@@ -17,14 +18,15 @@ export default function EventsList() {
   const navigation = useNavigation();
   const { location } = useLocation();
   const [center, setCenter] = useState({
-    lat: location?.coords.latitude || 51.509865,
-    lon: location?.coords.longitude || -0.118092,
+    lat: 51.509865,
+    lon:-0.118092,
   });
-  const [radius, setRadius] = useState<number>(10000);
+  const [radius, setRadius] = useState<number>(30000);
   const [postcode, setPostcode] = useState<string>("");
   const [postcodeError, setPostcodeError] = useState<boolean>(false);
 
   useEffect(() => {
+
     setIsLoading(true);
     navigation.setOptions({ headerShown: false });
 
@@ -37,26 +39,63 @@ export default function EventsList() {
         setErr(error);
       }
     });
-  }, []);
+    
+    if (location?.coords.latitude !== undefined && location?.coords.longitude !== undefined) {
+      setCenter({
+        lat: location.coords.latitude,
+        lon: location.coords.longitude,
+      });
+    }
+ 
+  }, [location]);
 
-  function HandleSearch() {
-    geoCode();
+  function handleSearch(){
+    geoCode()
+    setPostcode("")
   }
 
-  const geoCode = async () => {
-    const response = await fetch(
-      `https://api.postcodes.io/postcodes/${postcode}`
-    );
-    const locationData = await response.json();
-    if (!locationData.error) {
+  function handleCurrentLocation() {
+    setIsLoading(true);
+  
+
       setCenter({
-        lat: locationData.result.latitude,
-        lon: locationData.result.longitude,
+        lat: location?.coords.latitude || 51.509865,
+        lon: location?.coords.longitude || -0.118092,
       });
-    } else {
-      setPostcodeError(true);
+  
+      
+      setIsLoading(false);
+
     }
-  };
+
+    const handleSliderChange = (value: number) => {
+      setRadius(value);
+    };
+  
+  
+
+
+
+    const geoCode = async () => {
+      const response = await fetch(
+        `https://api.postcodes.io/postcodes/${postcode}`
+      );
+      const locationData = await response.json();
+      if (!locationData.error) {
+        setCenter({
+          lat: locationData.result.latitude,
+          lon: locationData.result.longitude,
+        });
+      } else {
+        setPostcodeError(true);
+        setTimeout(() => {
+          setPostcodeError(false);
+        }, 2000);
+      }
+    };
+  
+
+
 
   return (
     <View>
@@ -73,6 +112,17 @@ export default function EventsList() {
               mode="outlined"
               style={styles.postcodeSearch}
             />
+
+             <Button children="use current location" onPress={handleCurrentLocation} />
+             <Text style={styles.label}>Select Radius: {Math.round(radius / 1609.34)} miles</Text>
+              <Slider
+                style={styles.slider}
+                minimumValue={1}
+                maximumValue={300000}  
+                step={1}            
+                value={radius}
+                onValueChange={handleSliderChange}
+              />
             <Button onPress={HandleSearch} mode="contained" style={styles.searchButton}>
               <FontAwesome5 name="search-location" size={20} />
             </Button>
@@ -107,13 +157,17 @@ export default function EventsList() {
 }
 
 const styles = StyleSheet.create({
-  label: {
-    color: "gray",
-  },
   container: {
-    width: "125%",
-    alignSelf: "center",
+    margin: 20,
   },
+  label: {
+    fontSize: 10,
+    marginBottom: 10,
+  },
+  slider: {
+    width: '100%',
+  },
+
   postcodeContainer: {
     flexDirection: "row"
   },
