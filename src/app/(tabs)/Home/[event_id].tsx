@@ -1,7 +1,7 @@
 import { fetchEventByID } from "@/src/Utils/api";
 import { defaultPartyImage } from "@/src/components/EventCard";
 import Loading from "@/src/components/Loading";
-import { Text, View } from "@/src/components/Themed";
+import { ScrollView, Text, View } from "@/src/components/Themed";
 import { useLocalSearchParams, Stack, router, Link } from "expo-router";
 import { useEffect, useState } from "react";
 import * as React from "react";
@@ -105,14 +105,34 @@ export default function EventDetails() {
     hour12: true,
   });
 
+  function goToMapPoint() {
+    router.navigate(
+      `./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`
+    );
+  }
 
-  function goToMapPoint(){
-    router.navigate(`./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`);
+  async function startChatWithHost() {
+    const { data: chat } = await supabase
+      .from("chats")
+      .insert({})
+      .select()
+      .single();
+
+    const { data, error } = await supabase.from("chats_users").insert([
+      {
+        chat_id: chat.id,
+        user_id: currentUser,
+      },
+      {
+        chat_id: chat.id,
+        user_id: eventData.host_id,
+      },
+    ]);
   }
 
   return (
     <>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Stack.Screen options={{ title: eventData[0].title }} />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{eventData[0].title}</Text>
@@ -176,8 +196,9 @@ export default function EventDetails() {
             </Text>
           ) : null}
           <Button onPress={goToMapPoint}>View on Map</Button>
+          <Button onPress={startChatWithHost}>Chat to Host </Button>
         </View>
-      </View>
+      </ScrollView>
     </>
   );
 }
