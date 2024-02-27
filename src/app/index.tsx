@@ -1,13 +1,12 @@
 import {
   Alert,
   Button,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
   Image,
 } from "react-native";
 import { useState } from "react";
-import { Text, View, ScrollView } from "@/src/components/Themed";
+import { Text, View, TextInput, ScrollView } from "@/src/components/Themed";
 
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";

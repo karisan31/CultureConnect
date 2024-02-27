@@ -1,7 +1,7 @@
 import { fetchEventByID } from "@/src/Utils/api";
 import { defaultPartyImage } from "@/src/components/EventCard";
 import Loading from "@/src/components/Loading";
-import { Text, View } from "@/src/components/Themed";
+import { ScrollView, Text, View } from "@/src/components/Themed";
 import { useLocalSearchParams, Stack, router, Link } from "expo-router";
 import { useEffect, useState } from "react";
 import * as React from "react";
@@ -22,33 +22,42 @@ export default function EventDetails() {
   const [currentUser, setCurrentUser] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    supabase.auth.getUser().then((user) => {
+    setIsLoading(true);
+    supabase.auth.getUser().then((user: any) => {
+      //get the user currently logged in, set currentUser to their user ID
       setCurrentUser(user.data.user?.id);
-      fetchEventByID(event_id).then(({ data, error }) => {
+      //fetch the data for this event
+      fetchEventByID(event_id)
+      .then(({ data, error }) => {
         if (data) {
+          //if there is data not an error, set event data from the database
           setEventData(data);
+          //get the event host's info from the database
           supabase
             .from("profiles")
             .select("*")
             .eq("id", data[0].host_id)
-            .then((userData) => {
-              if (userData.data !== null) {
-                setHost(userData.data[0]);
+          .then((hostData) => {
+            //set host as the host's profile info form db
+              if (hostData.data !== null) {
+                setHost(hostData.data[0]);
               } else {
                 setHostError(true);
               }
+              //check if the current user is attending this event
               return supabase
                 .from("attendees")
                 .select("ticket_id")
                 .eq("user_id", user.data.user?.id)
                 .eq("event_id", event_id);
             })
-            .then((attending) => {
-              if (attending.error) {
-                setIsAttending(false);
+            .then((attending: any) => {
+              //if attending data comes through and the number of tickets is not 0, attending is true
+              if (attending && attending.data.length>0) {
+                setIsAttending(true);
                 setIsLoading(false);
               } else {
-                setIsAttending(true);
+                setIsAttending(false);
                 setIsLoading(false);
               }
             });
@@ -105,14 +114,34 @@ export default function EventDetails() {
     hour12: true,
   });
 
+  function goToMapPoint() {
+    router.navigate(
+      `./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`
+    );
+  }
 
-  function goToMapPoint(){
-    router.navigate(`./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`);
+  async function startChatWithHost() {
+    const { data: chat } = await supabase
+      .from("chats")
+      .insert({})
+      .select()
+      .single();
+
+    const { data, error } = await supabase.from("chats_users").insert([
+      {
+        chat_id: chat.id,
+        user_id: currentUser,
+      },
+      {
+        chat_id: chat.id,
+        user_id: eventData.host_id,
+      },
+    ]);
   }
 
   return (
     <>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Stack.Screen options={{ title: eventData[0].title }} />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{eventData[0].title}</Text>
@@ -176,8 +205,9 @@ export default function EventDetails() {
             </Text>
           ) : null}
           <Button onPress={goToMapPoint}>View on Map</Button>
+          <Button onPress={startChatWithHost}>Chat to Host </Button>
         </View>
-      </View>
+      </ScrollView>
     </>
   );
 }

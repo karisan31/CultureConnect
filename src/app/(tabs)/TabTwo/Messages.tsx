@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { fetchChatsByUserID } from "../../../Utils/api";
-import { Text, View } from "@/src/components/Themed";
-import { StyleSheet } from "react-native";
+import { ScrollView, Text, View } from "@/src/components/Themed";
+import { Image, StyleSheet } from "react-native";
 import { setupSubscription } from "../../../Utils/api";
 import ChatCard from "@/src/components/ChatCard";
 import { Link } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import Spinner from "react-native-loading-spinner-overlay";
 
 interface Chat {
   id: number;
@@ -15,6 +17,7 @@ export default function Messages(): JSX.Element {
   const [allChats, setAllChats] = useState<Chat[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigation = useNavigation();
   let chatsWatcher: any;
 
   const fetchData = async (): Promise<void> => {
@@ -38,6 +41,7 @@ export default function Messages(): JSX.Element {
 
   useEffect(() => {
     fetchData();
+    navigation.setOptions({ headerShown: false });
   }, []);
 
   const cleanup = (): void => {
@@ -50,20 +54,27 @@ export default function Messages(): JSX.Element {
     return cleanup;
   }, []);
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-
   if (error) {
     return <Text>Error: {error}</Text>;
   }
 
   return (
-    <View style={styles.container}>
-      {allChats.map((chat) => (
-        <ChatCard key={chat.id} chat={chat} />
-      ))}
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImage}
+        />
+        <Text style={styles.title}>Messages</Text>
+        <View style={styles.separator} />
+        <Spinner visible={isLoading} />
+        <View style={styles.chatContainer}>
+          {allChats.map((chat) => (
+            <ChatCard key={chat.id} chat={chat} />
+          ))}
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -71,15 +82,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    marginTop: -250,
   },
   title: {
-    fontSize: 20,
+    bottom: 165,
+    color: "white",
+    fontSize: 30,
     fontWeight: "bold",
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  coverImage: {
+    width: 700,
+    height: 500,
+    top: 10,
+    borderRadius: 280,
   },
   separator: {
     marginVertical: 30,
     height: 1,
     width: "80%",
+    bottom: 190,
+    backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  chatContainer: {
+    flex: 1,
+    alignItems: "center",
   },
 });

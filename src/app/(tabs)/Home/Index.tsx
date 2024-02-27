@@ -15,9 +15,10 @@ export default function Homepage() {
           source={require("../../../../assets/images/profileCover.png")}
           style={styles.coverImage}
         />
-        <Text style={[styles.title, { zIndex: 1 }]}> Home</Text>
+        <Text style={[styles.title, { zIndex: 1 }]}>Home</Text>
+        <View style={styles.separator} />
         <Button mode="contained" onPress={viewMap} style={styles.map}>
-          Map
+          Map View
         </Button>
 
         <View style={styles.listContainer}>
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "white",
-    top: -440,
+    bottom: 415,
     fontSize: 30,
     fontWeight: "bold",
     alignSelf: "center",
@@ -50,12 +51,20 @@ const styles = StyleSheet.create({
   },
   map: {
     marginVertical: 10,
-    top: -410,
+    top: -385,
   },
   coverImage: {
     top: -240,
     width: 700,
     height: 500,
     borderRadius: 280,
+  },
+  separator: {
+    marginTop: 30,
+    marginBottom: -25,
+    height: 1,
+    width: "80%",
+    top: -440,
+    backgroundColor: "rgba(255,255,255,0.1)",
   },
 });

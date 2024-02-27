@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../config/initSupabase";
 
 export const fetchEvents = async () => {
-  const { data, error } = await supabase.from("events").select("*");
-
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .order("date", { ascending: true });
   return { data, error };
 };
 
@@ -176,6 +178,21 @@ export async function fetchChatMessagesByChatId(chatId) {
     return data;
   } catch (error) {
     console.error("Error fetching chat messages:", error.message);
+    return null;
+  }
+}
+
+export async function fetchChatById(chatId) {
+  try {
+    const { data, error } = await supabase
+      .from("chat_users")
+      .select("*")
+      .eq("chats_id", chatId);
+
+    if (error) throw error;
+    if (data) return data;
+  } catch (error) {
+    console.error("Error fetching chat:", error.message);
     return null;
   }
 }

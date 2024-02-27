@@ -66,7 +66,7 @@ export default function TabLayout() {
         name="TabFour"
         options={{
           headerShown: false,
-          title: "My Profile",
+          title: "Profile",
           tabBarIcon: ({ color }) => (
             <FontAwesome name="user" size={24} color={color} />
           ),
