@@ -4,6 +4,7 @@ import {
   Touchable,
   TouchableOpacity,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { Button, Card, Paragraph, Title } from "react-native-paper";
 
@@ -20,13 +21,20 @@ export default function TabThreeScreen() {
   const [userEvents, setUserEvents] = useState<EventType[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [hostingEvents, setHostingEvents] = useState<EventType[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-    fetchUserEvents();
+  const onRefresh = useCallback(async () => {
+    setLoading(true);
+    try {
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+      await fetchUserEvents();
+    } catch (error) {
+      console.error("Error refreshing events", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const defaultPartyImage =
@@ -149,6 +157,9 @@ export default function TabThreeScreen() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      {loading && (
+        <ActivityIndicator size="large" color="#fff" style={styles.refresh} />
+      )}
       <View style={styles.container}>
         <Image
           source={require("../../../../assets/images/profileCover.png")}
@@ -312,5 +323,9 @@ const styles = StyleSheet.create({
     width: "80%",
     bottom: 190,
     backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  refresh: {
+    zIndex: 1,
+    top: 75,
   },
 });
