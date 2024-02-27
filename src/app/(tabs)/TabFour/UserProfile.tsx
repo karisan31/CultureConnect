@@ -83,7 +83,8 @@ export default function ProfileDataScreen() {
           source={require("../../../../assets/images/profileCover.png")}
           style={styles.coverImage}
         />
-        <Text style={[styles.viewProfileText, { zIndex: 1 }]}> My Profile</Text>
+        <Text style={[styles.viewProfileText, { zIndex: 1 }]}>Profile</Text>
+        <View style={styles.separator} />
         <RemoteImage
           path={profileData?.avatar_url}
           fallback={defaultProfileImage}
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
     borderRadius: 280,
   },
   viewProfileText: {
-    bottom: 190,
+    bottom: 165,
     color: "white",
     fontSize: 30,
     fontWeight: "bold",
@@ -183,5 +184,13 @@ const styles = StyleSheet.create({
   signOutText: {
     color: "white",
     fontWeight: "500",
+  },
+  separator: {
+    marginTop: 30,
+    marginBottom: -25,
+    height: 1,
+    width: "80%",
+    bottom: 190,
+    backgroundColor: "rgba(255,255,255,0.1)",
   },
 });
