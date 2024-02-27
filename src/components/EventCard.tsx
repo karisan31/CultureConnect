@@ -135,7 +135,7 @@ export default function EventCard({ event }: EventProps) {
                 Cancel
               </Button>
             ) : (
-              <Button onPress={attendingClick}>Going!</Button>
+              <Button onPress={attendingClick}>Attend</Button>
             )}
           </Card.Actions>
         </Card>
