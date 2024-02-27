@@ -2,7 +2,8 @@ import { supabase } from "@/config/initSupabase";
 import { fetchChatMessagesByChatId, useCurrentUser } from "@/src/Utils/api";
 import Loading from "@/src/components/Loading";
 import MessagesCard from "@/src/components/MessagesCard";
-import { View } from "@/src/components/Themed";
+import RemoteImage from "@/src/components/RemoteImage";
+import { ScrollView, View } from "@/src/components/Themed";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -12,12 +13,20 @@ import {
   Platform,
 } from "react-native";
 import { TextInput } from "react-native";
+import { defaultProfileImage } from "../TabFour/UserProfile";
 
 interface Message {
   id: number;
   content: string;
+  author_id: string;
 }
-
+interface ProfileData {
+  avatar_url: string;
+  first_name: string;
+  second_name: string;
+  email: string;
+  bio: string;
+}
 export default function chatRoom() {
   const { chat_id } = useLocalSearchParams();
   const [messageData, setMessageData] = useState<Message[]>([]);
@@ -25,6 +34,46 @@ export default function chatRoom() {
   const currentUser = useCurrentUser();
   const [message, setMessage] = useState<string>("");
   const [otherUser, setOtherUser] = useState("");
+  const [otherUserProfileData, setOtherUserProfileData] =
+    useState<ProfileData | null>(null);
+
+  useEffect(() => {
+    const uniqueUserIds = [
+      ...new Set(messageData.map((message) => message.author_id)),
+    ];
+    const otherUserId = uniqueUserIds.find(
+      (userId) => userId !== currentUser?.id
+    );
+    setOtherUser(otherUserId);
+  }, [currentUser, messageData]);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      if (!otherUser) {
+        return; // If otherUser is undefined, return early
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", otherUser)
+          .single();
+
+        if (error) {
+          throw error;
+        }
+
+        if (data) {
+          setOtherUserProfileData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+
+    fetchProfileData();
+  }, [otherUser]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -43,7 +92,6 @@ export default function chatRoom() {
           .from("chat_users")
           .select("*")
           .eq("chats_id", chatId);
-
         if (error) {
           throw error;
         }
@@ -88,7 +136,7 @@ export default function chatRoom() {
         );
         setMessage(msg);
       } else {
-        console.log("Message added successfully:", data);
+        console.log("Message added successfully:", { data });
       }
     } catch (error: any) {
       console.error("Error sending message:", error.message);
@@ -101,26 +149,51 @@ export default function chatRoom() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
-    >
-      <Stack.Screen options={{ title: `Chatting with: ${otherUser} ` }} />
-      {messageData.map((chat) => (
-        <MessagesCard key={chat.id} chat={chat} />
-      ))}
-      <View style={styles.inputContainer}>
-        <TextInput
-          multiline
-          value={message}
-          onChangeText={(text) => setMessage(text)}
-          placeholder="Type a message"
-          style={styles.messageInput}
-        />
-        <Button disabled={message === ""} title="Send" onPress={sendMessage} />
-      </View>
-    </KeyboardAvoidingView>
+    <>
+      <Stack.Screen
+        options={{
+          title: `Chatting with: ${otherUserProfileData?.first_name} ${otherUserProfileData?.second_name} `,
+          headerRight: () => (
+            <View style={styles.headerRightContainer}>
+              <RemoteImage
+                path={otherUserProfileData?.avatar_url}
+                fallback={defaultProfileImage}
+                style={styles.profileImage}
+                bucket="avatars"
+              />
+            </View>
+          ),
+          headerTitleStyle: {
+            fontSize: 18,
+          },
+        }}
+      />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={130}
+      >
+        <ScrollView style={styles.messageContainer}>
+          {messageData.map((chat) => (
+            <MessagesCard key={chat.id} chat={chat} otherUser={otherUser} />
+          ))}
+        </ScrollView>
+        <View style={styles.inputContainer}>
+          <TextInput
+            multiline
+            value={message}
+            onChangeText={(text) => setMessage(text)}
+            placeholder="Type a message"
+            style={styles.messageInput}
+          />
+          <Button
+            disabled={message === ""}
+            title="Send"
+            onPress={sendMessage}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </>
   );
 }
 
@@ -128,8 +201,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerRightContainer: {
+    marginRight: 10,
+  },
   inputContainer: {
-    bottom: -5,
     flexDirection: "row",
     padding: 10,
     gap: 10,
@@ -141,11 +216,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   messageContainer: {
+    flex: 1,
     padding: 10,
     marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 10,
-    maxWidth: "80%",
   },
   userMessageContainer: {
     backgroundColor: "#dcf8c6",
@@ -153,5 +228,12 @@ const styles = StyleSheet.create({
   },
   otherMessageContainer: {
     backgroundColor: "#fff",
+  },
+  profileImage: {
+    width: 25,
+    height: 25,
+    alignSelf: "center",
+    borderRadius: 125,
+    marginBottom: 1,
   },
 });
