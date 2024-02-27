@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1.5,
     borderRadius: 20,
     marginVertical: 10,
+  },
   separator: {
     marginTop: 30,
     marginBottom: -25,

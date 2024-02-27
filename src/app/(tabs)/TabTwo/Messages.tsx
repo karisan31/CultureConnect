@@ -67,11 +67,12 @@ export default function Messages(): JSX.Element {
         />
         <Text style={styles.title}>Messages</Text>
         <View style={styles.separator} />
-      <Spinner visible={isLoading} />
-      <View style={styles.container}>
-        {allChats.map((chat) => (
-          <ChatCard key={chat.id} chat={chat} />
-        ))}
+        <Spinner visible={isLoading} />
+        <View style={styles.container}>
+          {allChats.map((chat) => (
+            <ChatCard key={chat.id} chat={chat} />
+          ))}
+        </View>
       </View>
     </ScrollView>
   );
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    //justifyContent: "center",
     marginTop: -250,
   },
   title: {
