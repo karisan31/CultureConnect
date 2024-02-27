@@ -6,6 +6,7 @@ import { setupSubscription } from "../../../Utils/api";
 import ChatCard from "@/src/components/ChatCard";
 import { Link } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
+import Spinner from "react-native-loading-spinner-overlay";
 
 interface Chat {
   id: number;
@@ -53,10 +54,6 @@ export default function Messages(): JSX.Element {
     return cleanup;
   }, []);
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-
   if (error) {
     return <Text>Error: {error}</Text>;
   }
@@ -70,6 +67,8 @@ export default function Messages(): JSX.Element {
         />
         <Text style={styles.title}>Messages</Text>
         <View style={styles.separator} />
+      <Spinner visible={isLoading} />
+      <View style={styles.container}>
         {allChats.map((chat) => (
           <ChatCard key={chat.id} chat={chat} />
         ))}

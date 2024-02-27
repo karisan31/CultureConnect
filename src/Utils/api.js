@@ -179,3 +179,18 @@ export async function fetchChatMessagesByChatId(chatId) {
     return null;
   }
 }
+
+export async function fetchChatById(chatId) {
+  try {
+    const { data, error } = await supabase
+      .from("chat_users")
+      .select("*")
+      .eq("chats_id", chatId);
+
+    if (error) throw error;
+    if (data) return data;
+  } catch (error) {
+    console.error("Error fetching chat:", error.message);
+    return null;
+  }
+}
