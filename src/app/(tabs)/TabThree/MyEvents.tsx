@@ -62,7 +62,8 @@ export default function TabThreeScreen() {
           const { data: eventsData, error: eventsError } = await supabase
             .from("events")
             .select("*")
-            .in("event_id", eventIds);
+            .in("event_id", eventIds)
+            .order("date", { ascending: true });
           if (eventsError) {
             throw eventsError;
           }
