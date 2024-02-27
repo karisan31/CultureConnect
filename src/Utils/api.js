@@ -196,3 +196,31 @@ export async function fetchChatById(chatId) {
     return null;
   }
 }
+
+export async function subscribeToChats(callback) {
+  const realtime = supabase.getSocket();
+
+  const { data: initialChats, error } = await supabase
+    .from("chats_users")
+    .select("chat_id, users(user_id)")
+    .eq("users.user_id", supabase.auth.user()?.id)
+    .then(({ data }) => data || []);
+
+  if (error) {
+    throw error;
+  }
+
+  callback(initialChats);
+
+  const chatSubscription = realtime
+    .channel(`chats:users:user_id=eq.${supabase.auth.user()?.id}`)
+    .subscribe((event) => {
+      if (event.eventType === "INSERT") {
+        callback([...initialChats, event.new]);
+      }
+    });
+
+  return () => {
+    chatSubscription.unsubscribe();
+  };
+}

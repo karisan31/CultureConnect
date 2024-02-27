@@ -61,9 +61,8 @@ export default function ChatRoom() {
           ...new Set(messages?.map((message) => message.author_id)),
         ];
         const otherUserId = uniqueUserIds.find(
-          (userId) => userId !== (currentUser! as CurrentUser)?.id
+          (userId) => userId !== currentUser?.id
         );
-
         setOtherUser(otherUserId || "");
         setIsLoading(false);
       } catch (error: any) {
@@ -127,6 +126,7 @@ export default function ChatRoom() {
     }
   };
 
+  console.log(otherUserProfileData, "profileData");
   return (
     <>
       <Spinner visible={isLoading} />
