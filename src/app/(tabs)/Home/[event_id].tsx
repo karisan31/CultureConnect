@@ -117,17 +117,17 @@ export default function EventDetails() {
       .insert({})
       .select()
       .single();
-
-    const { data, error } = await supabase.from("chats_users").insert([
+    const { data, error } = await supabase.from("chat_users").insert([
       {
-        chat_id: chat.id,
+        chats_id: chat.id,
         user_id: currentUser,
       },
       {
-        chat_id: chat.id,
-        user_id: eventData.host_id,
+        chats_id: chat.id,
+        user_id: host.id,
       },
     ]);
+    router.navigate(`/(tabs)/TabTwo/${chat.id}`);
   }
 
   return (
