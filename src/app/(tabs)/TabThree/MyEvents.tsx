@@ -41,31 +41,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    top: -200,
     marginTop: -250,
-    marginBottom: -200,
   },
   title: {
-    top: 10,
+    bottom: 190,
     color: "white",
     fontSize: 30,
     fontWeight: "bold",
     alignSelf: "center",
     justifyContent: "center",
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
   coverImage: {
     width: 700,
     height: 500,
-    top: 210,
+    top: 10,
     borderRadius: 280,
   },
   postButton: {
-    top: 50,
+    bottom: 150,
   },
   postText: {
     color: "white",
