@@ -1,7 +1,6 @@
-import { Card } from "react-native-paper";
-import { ScrollView, Text, View } from "./Themed";
-import { KeyboardAvoidingView, StyleSheet } from "react-native";
-import { fetchDataAndSetProfileData, useCurrentUser } from "../Utils/api";
+import { Text, View } from "./Themed";
+import { StyleSheet } from "react-native";
+import { useCurrentUser } from "../Utils/api";
 import { useEffect, useState } from "react";
 import { supabase } from "@/config/initSupabase";
 import RemoteImage from "./RemoteImage";
@@ -15,9 +14,9 @@ interface Chat {
 }
 interface MessagesCardProps {
   chat: Chat;
-  otherUser: string;
 }
 interface ProfileData {
+  id: string;
   avatar_url: string;
   first_name: string;
   second_name: string;
@@ -29,34 +28,37 @@ interface CurrentUser {
 }
 
 export default function MessagesCard({ chat }: MessagesCardProps) {
-  const currentUser = useCurrentUser();
-  const myMessage = chat.author_id === (currentUser! as CurrentUser)?.id;
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const currentUser = profileData?.id;
+  const myMessage = chat.author_id === currentUser;
   useEffect(() => {
     async function fetchProfileData() {
       try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", chat.author_id)
-          .single();
+        const user = await supabase.auth.getUser();
+        if (user) {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.data.user?.id)
+            .single();
 
-        if (error) {
-          throw error;
-        }
+          if (error) {
+            throw error;
+          }
 
-        if (data) {
-          setProfileData(data);
+          if (data) {
+            setProfileData(data);
+            setIsLoading(false);
+          }
         }
       } catch (error) {
         console.error("Error fetching profile data");
       }
     }
-
     fetchProfileData();
-    setIsLoading(false);
   }, []);
+
   return (
     <>
       <Spinner visible={isLoading} />
