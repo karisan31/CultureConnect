@@ -9,6 +9,7 @@ import { useLocation } from "./LocationContext";
 import { insideCircle } from "geolocation-utils";
 import { Button, TextInput } from "react-native-paper";
 import { Text } from "./Themed";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function EventsList() {
   const [eventsData, setEventsData] = useState<any[]>([]);
@@ -102,13 +103,16 @@ export default function EventsList() {
         <Loading />
       ) : (
         <>
-          <View>
+        <Text>Enter postcode to find nearest events</Text>
+          <View style={styles.postcodeContainer}>
             <TextInput
               placeholder="Postcode"
               value={postcode}
               onChangeText={setPostcode}
               mode="outlined"
+              style={styles.postcodeSearch}
             />
+
              <Button children="use current location" onPress={handleCurrentLocation} />
              <Text style={styles.label}>Select Radius: {Math.round(radius / 1609.34)} miles</Text>
               <Slider
@@ -119,7 +123,9 @@ export default function EventsList() {
                 value={radius}
                 onValueChange={handleSliderChange}
               />
-            <Button children="Search" onPress={handleSearch} />
+            <Button onPress={HandleSearch} mode="contained" style={styles.searchButton}>
+              <FontAwesome5 name="search-location" size={20} />
+            </Button>
           </View>
           {postcodeError ? (
             <Text style={[styles.label, { color: "red" }]}>
@@ -161,4 +167,15 @@ const styles = StyleSheet.create({
   slider: {
     width: '100%',
   },
-  })
+
+  postcodeContainer: {
+    flexDirection: "row"
+  },
+  postcodeSearch:{
+    flex: 1,
+  },
+  searchButton: {
+    alignSelf: "center",
+    marginLeft: 15
+  }
+});
