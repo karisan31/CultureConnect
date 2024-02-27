@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     marginTop: -250,
-    marginBottom: -200,
   },
   title: {
     bottom: 190,
@@ -51,11 +50,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     justifyContent: "center",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
   coverImage: {
     width: 700,
