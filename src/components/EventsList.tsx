@@ -1,4 +1,5 @@
 import { View, FlatList, StyleSheet } from "react-native";
+import Slider from '@react-native-community/slider';
 import { useEffect, useState } from "react";
 import { fetchEvents } from "../Utils/api";
 import Loading from "./Loading";
@@ -10,6 +11,7 @@ import { Button, TextInput } from "react-native-paper";
 import { Text } from "./Themed";
 
 
+
 export default function EventsList() {
   const [eventsData, setEventsData] = useState<any[]>([]);
   const [err, setErr] = useState<any>(null);
@@ -17,10 +19,10 @@ export default function EventsList() {
   const navigation = useNavigation();
   const {location} = useLocation()
   const [center, setCenter] = useState({
-    lat: location?.coords.latitude || 51.509865,
-    lon: location?.coords.longitude || -0.118092,
+    lat: 51.509865,
+    lon:-0.118092,
   });
-  const [radius, setRadius] = useState<number>(10000);
+  const [radius, setRadius] = useState<number>(30000);
   const [postcode, setPostcode] = useState<string>("");
   const [postcodeError, setPostcodeError] = useState<boolean>(false);
   
@@ -28,6 +30,7 @@ export default function EventsList() {
  
 
   useEffect(() => {
+
     setIsLoading(true);
     navigation.setOptions({ headerShown: false });
 
@@ -40,11 +43,41 @@ export default function EventsList() {
         setErr(error);
       }
     });
-  }, []);
+    
+    if (location?.coords.latitude !== undefined && location?.coords.longitude !== undefined) {
+      setCenter({
+        lat: location.coords.latitude,
+        lon: location.coords.longitude,
+      });
+    }
+ 
+  }, [location]);
 
-  function HandleSearch(){
+  function handleSearch(){
     geoCode()
+    setPostcode("")
   }
+
+  function handleCurrentLocation() {
+    setIsLoading(true);
+  
+
+      setCenter({
+        lat: location?.coords.latitude || 51.509865,
+        lon: location?.coords.longitude || -0.118092,
+      });
+  
+      
+      setIsLoading(false);
+
+    }
+
+    const handleSliderChange = (value: number) => {
+      setRadius(value);
+    };
+  
+  
+
 
 
     const geoCode = async () => {
@@ -59,6 +92,9 @@ export default function EventsList() {
         });
       } else {
         setPostcodeError(true);
+        setTimeout(() => {
+          setPostcodeError(false);
+        }, 2000);
       }
     };
   
@@ -77,7 +113,17 @@ export default function EventsList() {
               onChangeText={setPostcode}
               mode="outlined"
             />
-            <Button children="Search" onPress={HandleSearch} />
+             <Button children="use current location" onPress={handleCurrentLocation} />
+             <Text style={styles.label}>Select Radius: {Math.round(radius / 1609.34)} miles</Text>
+              <Slider
+                style={styles.slider}
+                minimumValue={1}
+                maximumValue={300000}  
+                step={1}            
+                value={radius}
+                onValueChange={handleSliderChange}
+              />
+            <Button children="Search" onPress={handleSearch} />
           </View>
           {postcodeError ? (
           <Text style={[styles.label, { color: "red" }]}>
@@ -100,6 +146,14 @@ export default function EventsList() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    margin: 20,
+  },
   label: {
-    color: "gray",
-  }})
+    fontSize: 10,
+    marginBottom: 10,
+  },
+  slider: {
+    width: '100%',
+  },
+  })
