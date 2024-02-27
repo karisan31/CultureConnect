@@ -51,13 +51,13 @@ export default function ChatCard({ chat }: Props): JSX.Element {
 
   useEffect(() => {
     fetchDataAndSetProfileData(userIds, setProfileData)
-      .then(() => setIsLoading(false)) // Set isLoading to false when data is fetched
+      .then(() => setIsLoading(false))
       .catch((error) => {
         console.error(
           "Error fetching and setting profile data:",
           error.message
         );
-        setIsLoading(false); // Set isLoading to false in case of error as well
+        setIsLoading(false);
       });
   }, []);
 

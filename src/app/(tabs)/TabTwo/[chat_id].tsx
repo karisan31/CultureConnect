@@ -1,9 +1,4 @@
 import { supabase } from "@/config/initSupabase";
-import {
-  fetchChatById,
-  fetchChatMessagesByChatId,
-  useCurrentUser,
-} from "@/src/Utils/api";
 import MessagesCard from "@/src/components/MessagesCard";
 import RemoteImage from "@/src/components/RemoteImage";
 import { ScrollView, View } from "@/src/components/Themed";
@@ -20,123 +15,162 @@ import { defaultProfileImage } from "../TabFour/UserProfile";
 import Spinner from "react-native-loading-spinner-overlay";
 
 interface Message {
-  chat_id: string | string[];
-  id: any;
+  id: string;
   content: string;
   author_id: string;
   created_at: string;
 }
 
-interface CurrentUser {
-  id: string;
+interface Chat {
+  user_id: string;
 }
 
-interface ProfileData {
-  avatar_url: string;
+interface UserData {
+  id: string;
   first_name: string;
   second_name: string;
-  email: string;
-  bio: string;
+  avatar_url: string;
 }
 
 export default function ChatRoom() {
-  const { chat_id } = useLocalSearchParams();
+  const { chat_id } = useLocalSearchParams() as { chat_id: string };
+  const [isLoading, setIsLoading] = useState(false);
   const [messageData, setMessageData] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const currentUser = useCurrentUser();
-  const [message, setMessage] = useState<string>("");
-  const [otherUser, setOtherUser] = useState<string>("");
-  const [otherUserProfileData, setOtherUserProfileData] =
-    useState<ProfileData | null>(null);
+  const [message, setMessage] = useState("");
+  const [chatData, setChatData] = useState<Chat[]>([]);
+  const [hostUserData, setHostUserData] = useState<UserData | null>(null);
+  const [profileData, setProfileData] = useState<UserData | null>(null);
+  const currentUser = profileData?.id;
+  useEffect(() => {
+    async function fetchProfileData() {
+      try {
+        const user = await supabase.auth.getUser();
+        if (user) {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.data.user?.id)
+            .single();
+
+          if (error) {
+            throw error;
+          }
+
+          if (data) {
+            setProfileData(data);
+            setIsLoading(false);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching profile data");
+        setIsLoading(false);
+      }
+    }
+    fetchProfileData();
+  }, []);
+
+  useEffect(() => {
+    const fetchChatById = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("chat_users")
+          .select("*")
+          .eq("chats_id", chat_id);
+
+        if (error) throw error;
+        if (data) setChatData(data);
+      } catch (error: any) {
+        console.error("Error fetching chat:", error.message);
+        return null;
+      }
+    };
+    fetchChatById();
+  }, [chat_id]);
+
+  useEffect(() => {
+    const fetchHostUserData = async () => {
+      try {
+        const hostUserChat = chatData.find(
+          (user) => user.user_id !== currentUser
+        );
+        if (hostUserChat) {
+          const hostUserId = hostUserChat.user_id;
+
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", hostUserId)
+            .single();
+          if (error) {
+            throw error;
+          }
+
+          if (data) {
+            setHostUserData(data);
+          }
+        }
+      } catch (error: any) {
+        console.error("Error fetching host user data:", error.message);
+      }
+    };
+    fetchHostUserData();
+  }, [profileData]);
 
   useEffect(() => {
     const fetchMessagesAndChat = async () => {
       setIsLoading(true);
-      try {
-        const messages = await fetchChatMessagesByChatId(chat_id);
-        setMessageData(messages || []);
+      const { data, error } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("chat_id", chat_id);
 
-        const chatUsers = await fetchChatById(chat_id);
-        const uniqueUserIds = [
-          ...new Set(messages?.map((message) => message.author_id)),
-        ];
-        const otherUserId = uniqueUserIds.find(
-          (userId) => userId !== currentUser?.id
-        );
-        setOtherUser(otherUserId || "");
-        setIsLoading(false);
-      } catch (error: any) {
-        console.error("Error fetching messages or chat:", error.message);
-        setIsLoading(false);
+      if (error) {
+        throw error;
       }
+      setMessageData(data);
     };
-
     fetchMessagesAndChat();
-  }, [chat_id, currentUser]);
-
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      if (!otherUser) return;
-
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", otherUser)
-          .single();
-
-        if (error) throw error;
-        if (data) setOtherUserProfileData(data);
-      } catch (error: any) {
-        console.error("Error fetching profile data:", error.message);
-      }
-    };
-
-    fetchProfileData();
-  }, [otherUser]);
+  }, [chat_id]);
 
   const sendMessage = async () => {
-    const msg: string = message.trim();
+    const msg = message.trim();
     if (msg.length === 0) return;
 
-    const newMessage: Message = {
-      id: Date.now(),
+    const newMessage = {
       chat_id: chat_id,
-      author_id: (currentUser! as CurrentUser)?.id || "",
+      author_id: currentUser,
       content: msg,
       created_at: new Date().toISOString(),
     };
 
-    setMessageData([...messageData, newMessage]);
-    setMessage("");
-
     try {
-      const { data, error } = await supabase
+      const { data: insertedMessages, error } = await supabase
         .from("messages")
-        .insert([newMessage]);
+        .insert([newMessage])
+        .select();
 
       if (error) throw error;
-      console.log("Message added successfully:");
+      const insertedMessage = insertedMessages[0];
+      if (!insertedMessage?.id) {
+        throw new Error("Inserted message does not contain an ID.");
+      }
+      setMessageData([...messageData, insertedMessage]);
+      setMessage("");
+      console.log("Message added successfully:", insertedMessage);
     } catch (error: any) {
       console.error("Error adding message:", error.message);
-      setMessageData((prevState) =>
-        prevState.filter((item) => item.id !== newMessage.id)
-      );
-      setMessage(msg);
     }
   };
-
-  console.log(otherUserProfileData, "profileData");
   return (
     <>
       <Spinner visible={isLoading} />
       <Stack.Screen
         options={{
-          title: `Chatting with: ${otherUserProfileData?.first_name} ${otherUserProfileData?.second_name}`,
+          title: `Chatting with: ${hostUserData?.first_name} ${hostUserData?.second_name}`,
           headerRight: () => (
             <View style={styles.headerRightContainer}>
               <RemoteImage
-                path={otherUserProfileData?.avatar_url}
+                path={hostUserData?.avatar_url}
                 fallback={defaultProfileImage}
                 style={styles.profileImage}
                 bucket="avatars"
@@ -155,7 +189,7 @@ export default function ChatRoom() {
       >
         <ScrollView style={styles.messageContainer}>
           {messageData.map((chat) => (
-            <MessagesCard key={chat.id} chat={chat} otherUser={otherUser} />
+            <MessagesCard key={chat.id} chat={chat} />
           ))}
         </ScrollView>
         <View style={styles.inputContainer}>
