@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../config/initSupabase";
 
 export const fetchEvents = async () => {
-  const { data, error } = await supabase.from("events").select("*");
-
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .order("date", { ascending: true });
   return { data, error };
 };
 
