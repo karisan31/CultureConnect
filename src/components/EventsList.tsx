@@ -112,20 +112,26 @@ export default function EventsList() {
               <FontAwesome5 name="search-location" size={20} />
             </Button>
           </View>
-          <Button
-            children="use current location"
-            onPress={handleCurrentLocation}
-          />
-          <Text style={styles.label}>
-            Select Radius: {Math.round(radius / 1609.34)} miles
-          </Text>
-          <Slider
-            minimumValue={1}
-            maximumValue={300000}
-            step={1}
-            value={radius}
-            onValueChange={handleSliderChange}
-          />
+          <View style={styles.locationSettings}>
+            <Button
+              children="use current location"
+              onPress={handleCurrentLocation}
+            />
+            <Text style={styles.label}>
+              Select Radius: {Math.round(radius / 1609.34)} miles
+            </Text>
+            <Slider
+              style={styles.slider}
+              minimumValue={1}
+              maximumValue={300000}
+              step={1}
+              value={radius}
+              onSlidingComplete={handleSliderChange}
+              minimumTrackTintColor = "#C3B1E1"
+              maximumTrackTintColor = "grey"
+              thumbTintColor = "#C3B1E1"
+            />
+          </View>
           {postcodeError ? (
             <Text style={[styles.label, { color: "red" }]}>
               Please enter a valid postcode
@@ -158,6 +164,7 @@ export default function EventsList() {
 const styles = StyleSheet.create({
   container: {
     margin: 20,
+    width: 300,
   },
   label: {
     fontSize: 10,
@@ -165,12 +172,19 @@ const styles = StyleSheet.create({
   },
   postcodeContainer: {
     flexDirection: "row",
+    width: 300,
   },
   postcodeSearch: {
     flex: 1,
+    width: 250,
   },
   searchButton: {
     alignSelf: "center",
     marginLeft: 15,
   },
+  slider: {
+    width: "100%",
+    
+  },
+  locationSettings: {},
 });
