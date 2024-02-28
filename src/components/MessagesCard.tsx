@@ -14,6 +14,7 @@ interface Chat {
 }
 interface MessagesCardProps {
   chat: Chat;
+  hostUserData: any;
 }
 interface ProfileData {
   id: string;
@@ -27,11 +28,15 @@ interface CurrentUser {
   id: string;
 }
 
-export default function MessagesCard({ chat }: MessagesCardProps) {
+export default function MessagesCard({
+  chat,
+  hostUserData,
+}: MessagesCardProps) {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const currentUser = profileData?.id;
   const myMessage = chat.author_id === currentUser;
+
   useEffect(() => {
     async function fetchProfileData() {
       try {
@@ -65,13 +70,15 @@ export default function MessagesCard({ chat }: MessagesCardProps) {
       <View>
         <View>
           <RemoteImage
-            path={profileData?.avatar_url}
+            path={myMessage ? profileData?.avatar_url : hostUserData.avatar_url}
             fallback={defaultProfileImage}
             style={[styles.profileImage, myMessage ? styles.currentUser : null]}
             bucket="avatars"
           />
           <Text style={[styles.user, myMessage ? styles.currentUser : null]}>
-            {profileData?.first_name} {profileData?.second_name}
+            {myMessage
+              ? `${profileData?.first_name} ${profileData?.second_name}`
+              : `${hostUserData.first_name} ${hostUserData.second_name}`}
           </Text>
         </View>
         <View
