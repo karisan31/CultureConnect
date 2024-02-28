@@ -7,6 +7,7 @@ import Constants from "expo-constants";
 import { supabase } from "@/config/initSupabase";
 import Spinner from "react-native-loading-spinner-overlay";
 import { View } from "./Themed";
+import RemoteImage from "./RemoteImage";
 
 interface Chat {
   id: number;
@@ -24,11 +25,14 @@ interface ProfileData {
 interface Props {
   chat: Chat;
 }
+const defaultProfileImage =
+  "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
 
 export default function ChatCard({ chat }: Props): JSX.Element {
   const [profileData, setProfileData] = useState<ProfileData[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [otherUser, setOtherUser] = useState<string | null>(null);
+  const [otherUserAvatar, setOtherUserAvatar] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const { users } = chat;
@@ -78,6 +82,7 @@ export default function ChatCard({ chat }: Props): JSX.Element {
     setOtherUser(
       `${otherUserProfile.first_name} ${otherUserProfile.second_name}`
     );
+    setOtherUserAvatar(otherUserProfile.avatar_url);
   }, [currentUser, profileData]);
 
   if (isLoading) {
@@ -87,9 +92,15 @@ export default function ChatCard({ chat }: Props): JSX.Element {
   return (
     <View style={styles.chatContainer}>
       <Link href={`/(tabs)/TabTwo/${chat.id}`}>
-        <Card style={{ marginBottom: 10, padding: 10, width: 300 }}>
-          <Card.Content style={{}}>
-            <Text variant="bodyMedium">Chat with: {otherUser}</Text>
+        <Card style={{ padding: 10, width: 300 }}>
+          <RemoteImage
+            path={otherUserAvatar}
+            fallback={defaultProfileImage}
+            style={styles.image}
+            bucket="avatars"
+          />
+          <Card.Content>
+            <Text variant="bodyMedium">{otherUser}</Text>
           </Card.Content>
         </Card>
       </Link>
@@ -105,12 +116,17 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   chatContainer: {
-    marginVertical: 5
+    marginVertical: 5,
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  image: {
+    height: 50,
+    width: 50,
+    borderRadius: 100
   },
 });
