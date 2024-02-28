@@ -189,7 +189,11 @@ export default function ChatRoom() {
       >
         <ScrollView style={styles.messageContainer}>
           {messageData.map((chat) => (
-            <MessagesCard key={chat.id} chat={chat} />
+            <MessagesCard
+              key={chat.id}
+              chat={chat}
+              hostUserData={hostUserData}
+            />
           ))}
         </ScrollView>
         <View style={styles.inputContainer}>
