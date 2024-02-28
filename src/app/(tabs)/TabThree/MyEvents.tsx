@@ -175,33 +175,39 @@ export default function TabThreeScreen() {
           Host an Event!
         </Button>
         <Text style={styles.eventsText}>Events you're attending: </Text>
-        {userEvents.map((event, index) => (
-          <Card key={index} style={styles.eventCard}>
-            <Card.Content>
-              <Title>{event.title}</Title>
-              <Paragraph>{formatEventDate(event.date)}</Paragraph>
-              <Paragraph>Address: {event.address}</Paragraph>
-              <RemoteImage
-                path={event.image}
-                fallback={defaultPartyImage}
-                style={[
-                  styles.image,
-                  {
-                    height: 200,
-                    marginTop: 10,
-                    marginLeft: 5,
-                    marginRight: 5,
-                    borderRadius: 15,
-                  },
-                ]}
-                bucket="event_images"
-              />
-              <Button mode="contained" onPress={() => moreInfo(event)}>
-                More info
-              </Button>
-            </Card.Content>
-          </Card>
-        ))}
+        {userEvents.length === 0 ? (
+          <Text style={styles.notAttending}>
+            You are not attending any events!
+          </Text>
+        ) : (
+          userEvents.map((event, index) => (
+            <Card key={index} style={styles.eventCard}>
+              <Card.Content>
+                <Title>{event.title}</Title>
+                <Paragraph>{formatEventDate(event.date)}</Paragraph>
+                <Paragraph>Address: {event.address}</Paragraph>
+                <RemoteImage
+                  path={event.image}
+                  fallback={defaultPartyImage}
+                  style={[
+                    styles.image,
+                    {
+                      height: 200,
+                      marginTop: 10,
+                      marginLeft: 5,
+                      marginRight: 5,
+                      borderRadius: 15,
+                    },
+                  ]}
+                  bucket="event_images"
+                />
+                <Button mode="contained" onPress={() => moreInfo(event)}>
+                  More info
+                </Button>
+              </Card.Content>
+            </Card>
+          ))
+        )}
         {hostingEvents.length > 0 && (
           <Text style={styles.hostText}>Events you're hosting: </Text>
         )}
@@ -256,6 +262,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: -250,
     marginBottom: -20,
+  },
+  notAttending: {
+    top: -45,
   },
   buttonContainer: {
     flexDirection: "row",
