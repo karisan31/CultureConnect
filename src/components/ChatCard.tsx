@@ -92,15 +92,26 @@ export default function ChatCard({ chat }: Props): JSX.Element {
   return (
     <View style={styles.chatContainer}>
       <Link href={`/(tabs)/TabTwo/${chat.id}`}>
-        <Card style={{ padding: 10, width: 300 }}>
-          <RemoteImage
-            path={otherUserAvatar}
-            fallback={defaultProfileImage}
-            style={styles.image}
-            bucket="avatars"
-          />
-          <Card.Content>
-            <Text variant="bodyMedium">{otherUser}</Text>
+        <Card
+          style={{
+            width: 300,
+          }}
+        >
+          <Card.Content
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <RemoteImage
+              path={otherUserAvatar}
+              fallback={defaultProfileImage}
+              style={styles.image}
+              bucket="avatars"
+            />
+            <Card.Content>
+              <Text variant="bodyMedium" style={styles.otherUserName}>{otherUser}</Text>
+            </Card.Content>
           </Card.Content>
         </Card>
       </Link>
@@ -109,24 +120,16 @@ export default function ChatCard({ chat }: Props): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ecf0f1",
-    padding: 8,
-  },
   chatContainer: {
     marginVertical: 5,
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
   },
   image: {
     height: 50,
     width: 50,
-    borderRadius: 100
+    borderRadius: 100,
   },
+  otherUserName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  }
 });
