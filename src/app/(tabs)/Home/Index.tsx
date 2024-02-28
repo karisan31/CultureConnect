@@ -1,16 +1,40 @@
-import { StyleSheet, Image } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  RefreshControl,
+  ActivityIndicator,
+} from "react-native";
 import { ScrollView, Text, View } from "@/src/components/Themed";
 import EventsList from "@/src/components/EventsList";
 import { Link, router } from "expo-router";
 import { Button } from "react-native-paper";
+import { useState } from "react";
 
 export default function Homepage() {
+  const [refreshing, setRefreshing] = useState(false);
+
   function viewMap() {
     router.navigate("/(tabs)/Home/Map");
   }
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
+
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.container}>
+        {refreshing && (
+          <ActivityIndicator size="large" color="#fff" style={styles.refresh} />
+        )}
         <Image
           source={require("../../../../assets/images/profileCover.png")}
           style={styles.coverImage}
@@ -36,6 +60,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     minHeight: "100%",
     marginBottom: -340,
+  },
+  refresh: {
+    zIndex: 1,
+    position: "absolute",
+    top: 35,
+    left: "50%",
+    marginLeft: -20,
   },
   listContainer: {
     top: -350,

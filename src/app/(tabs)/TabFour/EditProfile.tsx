@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/config/initSupabase";
-import { Text, TextInput, View } from "@/src/components/Themed";
+import { ScrollView, Text, TextInput, View } from "@/src/components/Themed";
 import { Alert, Image, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
@@ -8,6 +8,7 @@ import { randomUUID } from "expo-crypto";
 import { decode } from "base64-arraybuffer";
 import { Button } from "react-native-paper";
 import { ActivityIndicator } from "react-native";
+import { Stack } from "expo-router";
 
 interface ProfileUpdates {
   first_name?: string;
@@ -131,39 +132,49 @@ export default function EditProfile() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Edit Profile Details</Text>
-      <Text style={styles.label}>First Name</Text>
-      <TextInput
-        style={styles.inputField}
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      <Text style={styles.label}>Second Name</Text>
-      <TextInput
-        style={styles.inputField}
-        value={secondName}
-        onChangeText={setSecondName}
-      />
-      <Text style={styles.label}>Bio</Text>
-      <TextInput style={styles.inputField} value={bio} onChangeText={setBio} />
-      <Button style={styles.button} onPress={pickImage} mode="contained">
-        Change profile picture
-      </Button>
-      <View style={styles.previewImage}>
-        {image && (
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-        )}
+    <ScrollView>
+      <Stack.Screen options={{ title: "Edit Profile" }} />
+      <View style={styles.container}>
+        <Text style={styles.title}>Edit Profile Details</Text>
+        <Text style={styles.label}>First Name</Text>
+        <TextInput
+          style={styles.inputField}
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <Text style={styles.label}>Second Name</Text>
+        <TextInput
+          style={styles.inputField}
+          value={secondName}
+          onChangeText={setSecondName}
+        />
+        <Text style={styles.label}>Bio</Text>
+        <TextInput
+          style={styles.inputField}
+          value={bio}
+          onChangeText={setBio}
+        />
+        <Button style={styles.button} onPress={pickImage} mode="contained">
+          Change profile picture
+        </Button>
+        <View style={styles.previewImage}>
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 200, height: 200 }}
+            />
+          )}
+        </View>
+        <Button
+          style={styles.button}
+          onPress={handleUpdateProfile}
+          mode="contained"
+          disabled={isLoading}
+        >
+          {isLoading ? <ActivityIndicator color="#fff" /> : "Update Profile"}
+        </Button>
       </View>
-      <Button
-        style={styles.button}
-        onPress={handleUpdateProfile}
-        mode="contained"
-        disabled={isLoading}
-      >
-        {isLoading ? <ActivityIndicator color="#fff" /> : "Update Profile"}
-      </Button>
-    </View>
+    </ScrollView>
   );
 }
 
