@@ -118,12 +118,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 10,
-    maxWidth: "80%",
+    maxWidth: "80%"
   },
   profileImage: {
     width: 25,
     height: 25,
-    alignSelf: "center",
     borderRadius: 125,
     marginBottom: 1,
   },
@@ -135,18 +134,18 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   userMessageContainer: {
-    backgroundColor: "green",
+    backgroundColor: "#0096FF",
     alignSelf: "flex-end",
   },
   otherMessageContainer: {
-    backgroundColor: "grey",
+    backgroundColor: "#CBC3E3",
   },
   currentUser: {
     alignSelf: "flex-end",
   },
   time: {
     fontSize: 12,
-    color: "#777",
+    color: "black",
     alignSelf: "flex-end",
   },
 });
