@@ -122,7 +122,10 @@ const Login = () => {
         />
       </View>
       <View style={styles.container}>
-        <Text style={styles.header}>Culture Connect</Text>
+        <Image
+          source={require("../../assets/images/CultureConnectLogo.png")}
+          style={styles.logo}
+        />
         <Text>Email</Text>
         <TextInput
           autoCapitalize="none"
@@ -153,9 +156,9 @@ const Login = () => {
       </View>
     </ScrollView>
   ) : (
-    <ScrollView style={styles.createContainer}>
+    <ScrollView contentContainerStyle={styles.createScroll}>
       <Spinner visible={loading} />
-      <View>
+      <View style={styles.createContainer}>
         <Image
           source={
             image
@@ -223,14 +226,17 @@ const Login = () => {
 
 const styles = StyleSheet.create({
   scroll: {
-    maxHeight: 300,
+    height: "100%",
+  },
+  createScroll: {
+    height: "100%",
   },
   label: {
     color: "white",
   },
   container: {
     flex: 1,
-    top: 100,
+    top: 160,
     backgroundColor: "rgba(255,255,255,0)",
     padding: 20,
     position: "absolute",
@@ -272,7 +278,7 @@ const styles = StyleSheet.create({
     top: 50,
     backgroundColor: "rgba(255,255,255,0)",
     padding: 20,
-    position: "absolute",
+    // position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
@@ -318,6 +324,11 @@ const styles = StyleSheet.create({
     left: -50,
     transform: [{ scaleX: -1 }, { rotate: "90deg" }],
     borderRadius: 1000,
+  },
+  logo: {
+    width: 350,
+    height: 35,
+    marginBottom: 40
   },
 });
 

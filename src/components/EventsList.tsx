@@ -94,7 +94,7 @@ export default function EventsList() {
         <Loading />
       ) : (
         <>
-          <Text>Enter postcode to find nearest events</Text>
+          <Text style={styles.searchLabel}>Search by area</Text>
           <View style={styles.postcodeContainer}>
             <TextInput
               placeholder="Postcode"
@@ -112,13 +112,14 @@ export default function EventsList() {
               <FontAwesome5 name="search-location" size={20} />
             </Button>
           </View>
-          <View style={styles.locationSettings}>
             <Button
               children="use current location"
               onPress={handleCurrentLocation}
             />
+          <View style={styles.sliderContainer}>
+            <Text style={styles.searchLabel}>Search by distance</Text>
             <Text style={styles.label}>
-              Select Radius: {Math.round(radius / 1609.34)} miles
+              Radius: {Math.round(radius / 1609.34)} miles
             </Text>
             <Slider
               style={styles.slider}
@@ -126,7 +127,7 @@ export default function EventsList() {
               maximumValue={300000}
               step={1}
               value={radius}
-              onSlidingComplete={handleSliderChange}
+              onValueChange={handleSliderChange}
               minimumTrackTintColor="#C3B1E1"
               maximumTrackTintColor="grey"
               thumbTintColor="#C3B1E1"
@@ -163,16 +164,19 @@ export default function EventsList() {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
-    width: 300,
+    width: "95%",
+    alignSelf: "center"
   },
   label: {
     fontSize: 10,
     marginBottom: 10,
+    alignSelf: "center"
   },
   postcodeContainer: {
     flexDirection: "row",
     width: 300,
+    alignSelf: "center",
+    marginBottom: 10
   },
   postcodeSearch: {
     flex: 1,
@@ -183,7 +187,15 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   slider: {
-    width: "100%",
+    width: "80%",
+    alignSelf: "center",
+    marginBottom: 10
   },
-  locationSettings: {},
+  sliderContainer : {
+    marginTop: 20
+  },
+  searchLabel: {
+    marginLeft: 25,
+    marginBottom: 5
+  }
 });
