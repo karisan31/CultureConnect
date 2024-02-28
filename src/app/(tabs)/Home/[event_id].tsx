@@ -27,8 +27,7 @@ export default function EventDetails() {
       //get the user currently logged in, set currentUser to their user ID
       setCurrentUser(user.data.user?.id);
       //fetch the data for this event
-      fetchEventByID(event_id)
-      .then(({ data, error }) => {
+      fetchEventByID(event_id).then(({ data, error }) => {
         if (data) {
           //if there is data not an error, set event data from the database
           setEventData(data);
@@ -37,8 +36,8 @@ export default function EventDetails() {
             .from("profiles")
             .select("*")
             .eq("id", data[0].host_id)
-          .then((hostData) => {
-            //set host as the host's profile info form db
+            .then((hostData) => {
+              //set host as the host's profile info form db
               if (hostData.data !== null) {
                 setHost(hostData.data[0]);
               } else {
@@ -53,7 +52,7 @@ export default function EventDetails() {
             })
             .then((attending: any) => {
               //if attending data comes through and the number of tickets is not 0, attending is true
-              if (attending && attending.data.length>0) {
+              if (attending && attending.data.length > 0) {
                 setIsAttending(true);
                 setIsLoading(false);
               } else {
@@ -121,6 +120,18 @@ export default function EventDetails() {
   }
 
   async function startChatWithHost() {
+    const { data: existingChat, error: existingChatError } = await supabase.rpc(
+      "get_chat_ids",
+      {
+        currentuser: currentUser,
+        host: host.id,
+      }
+    );
+
+    if (existingChat.length > 0) {
+      router.navigate(`/(tabs)/TabTwo/${existingChat[0].chats_id}`);
+      return;
+    }
     const { data: chat } = await supabase
       .from("chats")
       .insert({})

@@ -4,6 +4,7 @@ import {
   Touchable,
   TouchableOpacity,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { Button, Card, Paragraph, Title } from "react-native-paper";
 
@@ -20,14 +21,20 @@ export default function TabThreeScreen() {
   const [userEvents, setUserEvents] = useState<EventType[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [hostingEvents, setHostingEvents] = useState<EventType[]>([]);
-  const [expanded, setExpanded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-    fetchUserEvents();
+  const onRefresh = useCallback(async () => {
+    setLoading(true);
+    try {
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+      await fetchUserEvents();
+    } catch (error) {
+      console.error("Error refreshing events", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const defaultPartyImage =
@@ -105,7 +112,7 @@ export default function TabThreeScreen() {
     return new Date(dateString).toLocaleString("en-US", options);
   }
 
-  const deleteEvent = async (eventId: number) => {
+  const deleteEvent = async (event_id: number) => {
     Alert.alert(
       "Confirm Deletion",
       "Are you sure you want to delete this event?",
@@ -118,15 +125,16 @@ export default function TabThreeScreen() {
           text: "Delete",
           onPress: async () => {
             try {
+              console.log("Deleting event with ID:", event_id);
               const { error } = await supabase
                 .from("events")
                 .delete()
-                .eq("event_id", eventId);
-              console.log(eventId);
+                .eq("event_id", event_id);
 
               if (error) {
                 throw error;
               }
+              console.log("Event deleted successfully.");
               fetchUserEvents();
             } catch (error) {
               console.error("Error deleting event", error);
@@ -138,6 +146,10 @@ export default function TabThreeScreen() {
     );
   };
 
+  function moreInfo(event: EventType) {
+    router.navigate(`/(tabs)/Home/${event.event_id}`);
+  }
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -145,6 +157,9 @@ export default function TabThreeScreen() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      {loading && (
+        <ActivityIndicator size="large" color="#fff" style={styles.refresh} />
+      )}
       <View style={styles.container}>
         <Image
           source={require("../../../../assets/images/profileCover.png")}
@@ -181,10 +196,15 @@ export default function TabThreeScreen() {
                 ]}
                 bucket="event_images"
               />
+              <Button mode="contained" onPress={() => moreInfo(event)}>
+                More info
+              </Button>
             </Card.Content>
           </Card>
         ))}
-        <Text style={styles.eventsText}>Events you're hosting: </Text>
+        {hostingEvents.length > 0 && (
+          <Text style={styles.hostText}>Events you're hosting: </Text>
+        )}
         {hostingEvents.map((event, index) => (
           <Card key={index} style={styles.eventCard}>
             <Card.Content>
@@ -206,12 +226,22 @@ export default function TabThreeScreen() {
                 ]}
                 bucket="event_images"
               />
-              <Button
-                mode="contained"
-                onPress={() => deleteEvent(event.event_id)}
-              >
-                Delete Event
-              </Button>
+              <View style={styles.buttonContainer}>
+                <Button
+                  mode="contained"
+                  onPress={() => moreInfo(event)}
+                  style={styles.button}
+                >
+                  More info
+                </Button>
+                <Button
+                  mode="contained"
+                  onPress={() => deleteEvent(event.event_id)}
+                  style={styles.deleteButton}
+                >
+                  Delete Event
+                </Button>
+              </View>
             </Card.Content>
           </Card>
         ))}
@@ -225,7 +255,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     marginTop: -250,
-    marginBottom: -25,
+    marginBottom: -20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+    backgroundColor: "transparent",
+  },
+  button: {
+    width: "48%",
+  },
+  deleteButton: {
+    width: "48%",
+    backgroundColor: "#ff4747",
   },
   title: {
     bottom: 165,
@@ -236,7 +279,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   eventsText: {
-    top: -30,
+    top: -50,
+    fontSize: 30,
+    fontWeight: "bold",
+    alignSelf: "center",
+  },
+  hostText: {
+    marginTop: 15,
+    top: -50,
     fontSize: 30,
     fontWeight: "bold",
     alignSelf: "center",
@@ -255,7 +305,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   eventCard: {
-    top: -20,
+    top: -40,
     marginVertical: 10,
     marginHorizontal: 20,
   },
@@ -273,5 +323,9 @@ const styles = StyleSheet.create({
     width: "80%",
     bottom: 190,
     backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  refresh: {
+    zIndex: 1,
+    top: 75,
   },
 });

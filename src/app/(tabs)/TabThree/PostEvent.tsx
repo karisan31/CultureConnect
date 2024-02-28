@@ -198,6 +198,7 @@ export default function PostEvent() {
             value={title}
             onChangeText={setTitle}
             mode="outlined"
+            style={styles.inputField}
           />
         </View>
         <View>
@@ -206,6 +207,7 @@ export default function PostEvent() {
             value={address}
             onChangeText={setAddress}
             mode="outlined"
+            style={styles.inputField}
           />
         </View>
         {postcodeError ? (
@@ -219,6 +221,7 @@ export default function PostEvent() {
             value={postcode}
             onChangeText={setPostcode}
             mode="outlined"
+            style={styles.inputField}
           />
         </View>
         <View
@@ -278,13 +281,13 @@ export default function PostEvent() {
             flexDirection: "row",
           }}
         >
-          <View>
+          <View style={styles.inputContainer}>
             <TextInput
               placeholder="Max attendees"
               value={maxAttendees}
               onChangeText={setMaxAttendees}
               mode="outlined"
-              style={{ width: 150 }}
+              style={styles.maxAttendeesInput}
             />
             <TextInput
               placeholder="Description"
@@ -292,12 +295,7 @@ export default function PostEvent() {
               onChangeText={setDescription}
               multiline
               mode="outlined"
-              style={{
-                marginTop: 5,
-                height: 200,
-                maxWidth: 150,
-                overflow: "scroll",
-              }}
+              style={styles.descriptionInput}
             />
           </View>
 
@@ -339,6 +337,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     padding: 20,
+    paddingHorizontal: 20
   },
   header: {
     fontSize: 30,
@@ -346,28 +345,37 @@ const styles = StyleSheet.create({
     margin: 50,
   },
   inputField: {
-    marginVertical: 4,
+    marginVertical: 10,
+    marginBottom: 1,
     height: 50,
     borderWidth: 1,
     borderColor: "#2b825b",
     borderRadius: 4,
-    padding: 10,
+    padding: 5,
+  },
+  inputContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    marginVertical: 10
   },
   button: {
-    marginVertical: 15,
+    marginVertical: 10,
+    marginRight: 20,
     alignItems: "center",
     backgroundColor: "#2b825b",
     padding: 12,
     borderRadius: 4,
+    position: "relative",
+    top: -50
   },
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "bold",
+    
   },
   imageContainer: {
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 10,
   },
   image: {
     width: 150,
@@ -377,5 +385,21 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     marginTop: 16,
+  },
+  maxAttendeesInput: {
+    width: 150,
+    marginTop: -5,
+  },
+  descriptionInput: {
+    flex: 1,
+    marginTop: 10,
+    marginBottom: 10,
+    height: 125,
+    width: 350,
+    overflow: "scroll",
+    borderWidth: 1,
+
+    borderRadius: 4,
+    padding: 5,
   },
 });
