@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 10,
     gap: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#fff"
   },
   messageInput: {
     flex: 1,
@@ -249,8 +249,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginTop: 10,
+    marginBottom: 10,
     marginHorizontal: 10,
-    borderRadius: 10,
+    borderRadius: 10
   },
   profileImage: {
     width: 25,
