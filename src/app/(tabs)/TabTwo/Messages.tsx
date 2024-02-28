@@ -70,7 +70,7 @@ export default function Messages(): JSX.Element {
         />
         <Text style={styles.title}>Messages</Text>
         <View style={styles.separator} />
-        <View style={styles.chatContainer}>
+        <View>
           {allChats.map((chat) => (
             <ChatCard key={chat.id} chat={chat} />
           ))}

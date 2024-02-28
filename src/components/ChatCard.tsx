@@ -5,7 +5,8 @@ import { Link } from "expo-router";
 import { StyleSheet } from "react-native";
 import Constants from "expo-constants";
 import { supabase } from "@/config/initSupabase";
-import Spinner from "react-native-loading-spinner-overlay"; // Import Spinner component
+import Spinner from "react-native-loading-spinner-overlay";
+import { View } from "./Themed";
 
 interface Chat {
   id: number;
@@ -28,7 +29,7 @@ export default function ChatCard({ chat }: Props): JSX.Element {
   const [profileData, setProfileData] = useState<ProfileData[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [otherUser, setOtherUser] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Initialize isLoading state
+  const [isLoading, setIsLoading] = useState(true);
 
   const { users } = chat;
   const userIds = getChatUserNames(users);
@@ -84,25 +85,15 @@ export default function ChatCard({ chat }: Props): JSX.Element {
   }
 
   return (
-    <>
-      <Card style={{ margin: 10, padding: 10 }}>
-        <Card.Content
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            maxWidth: "90%",
-          }}
-        >
-          <Text variant="bodyMedium">Chat with: {otherUser}</Text>
-          <Card.Actions>
-            <Button compact>
-              <Link href={`/(tabs)/TabTwo/${chat.id}`}>Open Chat</Link>
-            </Button>
-          </Card.Actions>
-        </Card.Content>
-      </Card>
-    </>
+    <View style={styles.chatContainer}>
+      <Link href={`/(tabs)/TabTwo/${chat.id}`}>
+        <Card style={{ marginBottom: 10, padding: 10, width: 300 }}>
+          <Card.Content style={{}}>
+            <Text variant="bodyMedium">Chat with: {otherUser}</Text>
+          </Card.Content>
+        </Card>
+      </Link>
+    </View>
   );
 }
 
@@ -110,9 +101,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingTop: Constants.statusBarHeight,
     backgroundColor: "#ecf0f1",
     padding: 8,
+  },
+  chatContainer: {
+    marginVertical: 5
   },
   paragraph: {
     margin: 24,
