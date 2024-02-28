@@ -37,7 +37,7 @@ export default function EventsList() {
       } else {
         setErr(error);
       }
-    });
+    }) 
 
     if (
       location?.coords.latitude !== undefined &&

@@ -91,9 +91,7 @@ export default function EventCard({ event }: EventProps) {
   });
   return (
     <View>
-      {isLoading ? (
-        <Loading />
-      ) : (
+     
         <Card style={styles.card}>
           <Card.Content>
             <Text variant="titleLarge">{event.title}</Text>
@@ -139,7 +137,7 @@ export default function EventCard({ event }: EventProps) {
             )}
           </Card.Actions>
         </Card>
-      )}
+      
     </View>
   );
 }
