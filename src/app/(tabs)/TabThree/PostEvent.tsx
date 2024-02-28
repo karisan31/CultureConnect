@@ -51,10 +51,14 @@ export default function PostEvent() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setPostcodeError(false)
+    geoCode();
+  }, [postcode]);
+
   const handleSubmit = () => {
     setLoading(true);
     setIsError(false);
-    geoCode();
     uploadImage()
       .then((imagePath) => {
         date?.setHours(timeHours);
@@ -210,11 +214,6 @@ export default function PostEvent() {
             style={styles.inputField}
           />
         </View>
-        {postcodeError ? (
-          <Text style={[styles.label, { color: "red" }]}>
-            Please enter a valid postcode
-          </Text>
-        ) : null}
         <View>
           <TextInput
             placeholder="Postcode"
@@ -222,7 +221,12 @@ export default function PostEvent() {
             onChangeText={setPostcode}
             mode="outlined"
             style={styles.inputField}
-          />
+            />
+            {postcodeError ? (
+              <Text style={[styles.label, { color: "red" }]}>
+                Please enter a valid postcode
+              </Text>
+            ) : null}
         </View>
         <View
           style={{
@@ -337,7 +341,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     padding: 20,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   header: {
     fontSize: 30,
@@ -356,7 +360,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "column",
     justifyContent: "space-between",
-    marginVertical: 10
+    marginVertical: 10,
   },
   button: {
     marginVertical: 10,
@@ -366,12 +370,11 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 4,
     position: "relative",
-    top: -50
+    top: -50,
   },
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    
   },
   imageContainer: {
     borderRadius: 8,
