@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   signOut: {
     padding: 15,
     top: -135,
-    backgroundColor: "#50C878",
+    backgroundColor: "#cc0000",
     borderRadius: 25,
   },
   signOutText: {

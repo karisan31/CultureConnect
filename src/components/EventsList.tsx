@@ -127,9 +127,9 @@ export default function EventsList() {
               step={1}
               value={radius}
               onSlidingComplete={handleSliderChange}
-              minimumTrackTintColor = "#C3B1E1"
-              maximumTrackTintColor = "grey"
-              thumbTintColor = "#C3B1E1"
+              minimumTrackTintColor="#C3B1E1"
+              maximumTrackTintColor="grey"
+              thumbTintColor="#C3B1E1"
             />
           </View>
           {postcodeError ? (
@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: "100%",
-    
   },
   locationSettings: {},
 });
