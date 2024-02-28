@@ -1,5 +1,5 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { useState, useEffect } from "react";
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
 import { Text, View, ScrollView } from "@/src/components/Themed";
 import { Image } from "react-native";
 import { Link, router } from "expo-router";
@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import Loading from "@/src/components/Loading";
 import RemoteImage from "@/src/components/RemoteImage";
 import { Button } from "react-native-paper";
+import { RefreshControl } from "react-native";
 
 export const defaultProfileImage =
   "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
@@ -24,37 +25,38 @@ export default function ProfileDataScreen() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
     navigation.setOptions({ headerShown: false });
-    async function fetchProfileData() {
-      try {
-        const user = await supabase.auth.getUser();
-
-        if (user) {
-          const { data, error } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", user.data.user?.id)
-            .single();
-
-          if (error) {
-            throw error;
-          }
-
-          if (data) {
-            setProfileData(data);
-            setIsLoading(false);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching profile data");
-      }
-    }
-
     fetchProfileData();
   }, []);
+
+  const fetchProfileData = async () => {
+    try {
+      const user = await supabase.auth.getUser();
+
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.data.user?.id)
+          .single();
+
+        if (error) {
+          throw error;
+        }
+
+        if (data) {
+          setProfileData(data);
+          setIsLoading(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching profile data");
+    }
+  };
 
   const goToEditProfile = () => {
     router.navigate(`/TabFour/EditProfile`);
@@ -68,6 +70,13 @@ export default function ProfileDataScreen() {
     }
   };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchProfileData().then(() => {
+      setRefreshing(false);
+    });
+  }, []);
+
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -77,8 +86,15 @@ export default function ProfileDataScreen() {
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.container}>
+        {refreshing && (
+          <ActivityIndicator size="large" color="#fff" style={styles.refresh} />
+        )}
         <Image
           source={require("../../../../assets/images/profileCover.png")}
           style={styles.coverImage}
@@ -117,6 +133,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: -250,
     marginBottom: -75,
+  },
+  refresh: {
+    zIndex: 1,
+    position: "absolute",
+    top: "25%",
+    left: "50%",
+    marginLeft: -20,
   },
   loadingContainer: {
     flex: 1,
