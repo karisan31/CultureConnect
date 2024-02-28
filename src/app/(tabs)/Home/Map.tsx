@@ -28,7 +28,6 @@ interface Event {
 
 export default function Map() {
   const fromEvent = useLocalSearchParams();
-  const { location } = useLocation();
   const [initialRegion, setInitialRegion] = useState({
     latitude: 54.7024,
     longitude: -3.2765,
@@ -40,12 +39,20 @@ export default function Map() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    
+    
     setIsLoading(true);
-    if (!isNaN(Number(fromEvent.lat))) {
-      console.log(fromEvent)
+    if (fromEvent && !isNaN(Number(fromEvent.lat))) {
       setInitialRegion({
         latitude: Number(fromEvent.lat),
         longitude: Number(fromEvent.long),
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+      });
+    } else {
+      setInitialRegion({
+        latitude: 54.7024,
+        longitude: -3.2765,
         latitudeDelta: 10,
         longitudeDelta: 10,
       });

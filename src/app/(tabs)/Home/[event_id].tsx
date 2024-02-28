@@ -114,10 +114,9 @@ export default function EventDetails() {
   });
 
   function goToMapPoint() {
-    router.navigate(
-      `./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`
-    );
+    router.navigate(`./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`);
   }
+     
 
   async function startChatWithHost() {
     const { data: existingChat, error: existingChatError } = await supabase.rpc(
