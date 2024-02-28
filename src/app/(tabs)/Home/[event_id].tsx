@@ -9,6 +9,7 @@ import { StyleSheet } from "react-native";
 import RemoteImage from "@/src/components/RemoteImage";
 import { supabase } from "@/config/initSupabase";
 import { Button } from "react-native-paper";
+import Spinner from "react-native-loading-spinner-overlay";
 
 export default function EventDetails() {
   const { event_id } = useLocalSearchParams();
@@ -95,7 +96,12 @@ export default function EventDetails() {
   }
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <>
+        <Spinner visible={true} />
+        <Stack.Screen options={{ title: "Event details" }} />
+      </>
+    );
   }
 
   if (!eventData || !eventData[0]) {
@@ -114,9 +120,10 @@ export default function EventDetails() {
   });
 
   function goToMapPoint() {
-    router.navigate(`./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`);
+    router.navigate(
+      `./Map?lat=${eventData[0].location.latitude}&long=${eventData[0].location.longitude}`
+    );
   }
-     
 
   async function startChatWithHost() {
     const { data: existingChat, error: existingChatError } = await supabase.rpc(
@@ -152,70 +159,105 @@ export default function EventDetails() {
   return (
     <>
       <ScrollView style={styles.container}>
-        <Stack.Screen options={{ title: eventData[0].title }} />
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{eventData[0].title}</Text>
-          <View
-            style={styles.separator}
-            lightColor="#eee"
-            darkColor="rgba(255,255,255,0.1)"
-          />
-          <RemoteImage
-            path={eventData[0].image}
-            fallback={defaultPartyImage}
-            style={styles.image}
-            bucket="event_images"
-          />
-        </View>
-        <View style={styles.container}>
-          <Text style={styles.title}>Host: </Text>
-          {hostError ? (
-            <Text>Something went wrong, host not found.</Text>
-          ) : (
-            <Text> {`${host.first_name} ${host.second_name}`}</Text>
-          )}
-          <Text style={styles.title}>Date: </Text>
-          <Text> {readableDate}</Text>
-          <Text style={styles.title}>Location:</Text>
-          <Text> {eventData[0].address}</Text>
-          {eventData[0].max_attendees ? (
-            <Text style={styles.title}>
-              Maximum attendees: {eventData[0].max_attendees}
-            </Text>
-          ) : (
-            <Text style={styles.title}>Maximum attendees: N/A</Text>
-          )}
-          <Text style={styles.title}>Description:</Text>
-          {eventData[0].description ? (
-            <Text>{eventData[0].description}</Text>
-          ) : (
-            <Text>No description for this event</Text>
-          )}
-          {isAttending ? (
-            <Button
-              style={{ backgroundColor: "pink", width: 100 }}
-              onPress={attendingClick}
-              labelStyle={{ color: "black" }}
-            >
-              Cancel
-            </Button>
-          ) : (
-            <Button
-              style={{ backgroundColor: "#CBC3E3", width: 100 }}
-              onPress={attendingClick}
-              labelStyle={{ color: "black" }}
-            >
-              Going!
-            </Button>
-          )}
-          {attendError ? (
-            <Text>
-              Something went wrong! Cannot change attendance status at this
-              time.
-            </Text>
-          ) : null}
-          <Button onPress={goToMapPoint}>View on Map</Button>
-          <Button onPress={startChatWithHost}>Chat to Host </Button>
+        <View style={styles.contentContainer}>
+          <Stack.Screen options={{ title: "Event details" }} />
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{eventData[0].title}</Text>
+            <View
+              style={styles.separator}
+              lightColor="#eee"
+              darkColor="rgba(255,255,255,0.1)"
+            />
+            <RemoteImage
+              path={eventData[0].image}
+              fallback={defaultPartyImage}
+              style={styles.image}
+              bucket="event_images"
+            />
+          </View>
+          <View style={styles.container}>
+            <View style={styles.sameLine}>
+              <Text style={styles.title}>Host: </Text>
+              {hostError ? (
+                <Text style={styles.text}>
+                  Something went wrong, host not found.
+                </Text>
+              ) : (
+                <Text style={styles.text}>
+                  {" "}
+                  {`${host.first_name} ${host.second_name}`}
+                </Text>
+              )}
+            </View>
+            <View style={styles.sameLine}>
+              <Text style={styles.title}>Date: </Text>
+              <Text style={styles.text}> {readableDate}</Text>
+            </View>
+            <View>
+              <Text style={styles.title}>Location: </Text>
+              <Text style={styles.text}>{eventData[0].address}</Text>
+            </View>
+            <View style={styles.sameLine}>
+              {eventData[0].max_attendees ? (
+                <>
+                  <Text style={styles.title}>Maximum attendees:</Text>
+                  <Text style={styles.text}> {eventData[0].max_attendees}</Text>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.title}>Maximum attendees:</Text>
+                  <Text style={styles.text}>N/A</Text>
+                </>
+              )}
+            </View>
+            <View style={styles.sameLine}>
+              <Text style={styles.title}>Description:</Text>
+              {eventData[0].description ? (
+                <Text style={styles.text}>{eventData[0].description}</Text>
+              ) : (
+                <Text style={styles.text}>No description for this event</Text>
+              )}
+            </View>
+            {attendError ? (
+              <Text>
+                Something went wrong! Cannot change attendance status at this
+                time.
+              </Text>
+            ) : null}
+            <View style={styles.buttonContainer}>
+              {isAttending ? (
+                <Button
+                  style={styles.clickedButton}
+                  onPress={attendingClick}
+                  labelStyle={{ color: "black" }}
+                >
+                  Cancel
+                </Button>
+              ) : (
+                <Button
+                  style={styles.buttons}
+                  onPress={attendingClick}
+                  labelStyle={{ color: "black" }}
+                >
+                  Going!
+                </Button>
+              )}
+              <Button
+                style={styles.buttons}
+                labelStyle={{ color: "black" }}
+                onPress={goToMapPoint}
+              >
+                View on Map
+              </Button>
+              <Button
+                style={styles.buttons}
+                labelStyle={{ color: "black" }}
+                onPress={startChatWithHost}
+              >
+                Chat to Host{" "}
+              </Button>
+            </View>
+          </View>
         </View>
       </ScrollView>
     </>
@@ -226,9 +268,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  contentContainer: {
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  sameLine: {
+    alignItems: "baseline",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  text: {
+    fontSize: 19,
+    fontWeight: "normal",
+  },
   titleContainer: {
     alignItems: "center",
     marginTop: 40,
+  },
+  buttons: {
+    backgroundColor: "#CBC3E3",
+    width: 115,
+    margin: 15,
+  },
+  buttonContainer: {
+    justifyContent: "space-evenly",
+    flexDirection: "row",
+    margin: 10,
+  },
+  clickedButton: {
+    backgroundColor: "pink",
+    width: 115,
+    margin: 15,
   },
   title: {
     fontSize: 20,
