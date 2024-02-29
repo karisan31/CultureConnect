@@ -14,7 +14,7 @@ This app was built using:
 - React Native
 - Supabase (Open source alternative to Firebase)
 - MapView & Postcodes.io
-- 
+  
 
 Features: 
 
@@ -45,21 +45,37 @@ Features:
   Before working with the repository, you're going to need to install npm to your newly downloaded repo by typing the following command into your terminal while inside the git repository
   
   ```npm install```
-  
-3. Set up your device
 
-  iOS emulator: Follow this link to install Xcode - https://apps.apple.com/us/app/xcode/id497799835?mt=12
-  Android emulator: Follow this link to install Android Studio on Linux, Ubuntu or Windows - https://developer.android.com/studio
+3. Access the database
+   
+  Create a folder named .env and insert the following:-
+  
+  EXPO_PUBLIC_SUPABASE_URL= *insert your Supabase url*
+  
+  EXPO_PUBLIC_SUPABASE_ANON_KEY=*insert your Supabase anon key* 
+
+  See [this](https://docs.expo.dev/guides/using-supabase/) for more information.
+  
+  NOTE: Make sure to add .env to your git ignore as env files usually contain sensitive information and should not be put in version control*
+    
+4. Set up your device
+
+  iOS emulator: Follow this [link](https://apps.apple.com/us/app/xcode/id497799835?mt=12) to install Xcode
+  
+  Android emulator: Follow this [link](https://developer.android.com/studio) to install Android Studio on Linux, Ubuntu or Windows 
+  
   Expo Go app: Install the 'Expo Go' app on any mobile device to view directly. 
 
 
-4. Run app 
+5. Run app 
    
   Once you have cloned the repository and installed all of the necessary dependencies, you will need to deploy your app using the following command
   
   ```npm start```
 
   Follow the terminal directions to view the app on an emulator of your choice, or scan the QR code on your mobile to open the Expo Go app.  
+
+
 
 
 
