@@ -178,7 +178,7 @@ export default function ChatRoom() {
     <>
       <Stack.Screen
         options={{
-          title: `Chatting with: ${hostUserData?.first_name} ${hostUserData?.second_name}`,
+          title: `${hostUserData?.first_name} ${hostUserData?.second_name}`,
           headerRight: () => (
             <View style={styles.headerRightContainer}>
               <RemoteImage
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 10,
     gap: 10,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
   messageInput: {
     flex: 1,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     marginHorizontal: 10,
-    borderRadius: 10
+    borderRadius: 10,
   },
   profileImage: {
     width: 25,

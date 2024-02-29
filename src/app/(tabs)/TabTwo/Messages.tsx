@@ -58,9 +58,9 @@ export default function Messages(): JSX.Element {
     return <Text>Error: {error}</Text>;
   }
 
-  // if (isLoading) {
-  //   return <Spinner visible={true} />;
-  // }
+  if (isLoading) {
+    return <Spinner visible={true} />;
+  }
   return (
     <ScrollView>
       <View style={styles.container}>

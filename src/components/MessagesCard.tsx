@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 10,
-    maxWidth: "80%"
+    maxWidth: "80%",
   },
   profileImage: {
     width: 25,
