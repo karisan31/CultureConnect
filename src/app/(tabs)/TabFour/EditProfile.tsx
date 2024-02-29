@@ -136,20 +136,20 @@ export default function EditProfile() {
       <Stack.Screen options={{ title: "Edit Profile" }} />
 
       <View style={styles.container}>
-        <Text style={styles.title}>Edit Profile Details</Text>
-        <Text style={styles.label}>First Name</Text>
+        {/* <Text style={styles.title}>Edit Profile Details</Text> */}
+        <Text>First Name</Text>
         <TextInput
           style={styles.inputField}
           value={firstName}
           onChangeText={setFirstName}
         />
-        <Text style={styles.label}>Second Name</Text>
+        <Text>Second Name</Text>
         <TextInput
           style={styles.inputField}
           value={secondName}
           onChangeText={setSecondName}
         />
-        <Text style={styles.label}>Bio</Text>
+        <Text>Bio</Text>
         <TextInput
           style={styles.inputField}
           value={bio}
@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     padding: 20,
     zIndex: 1,
     backgroundColor: "transparent",
+    top: 100,
   },
   previewImage: {
     alignItems: "center",
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     height: 50,
     borderWidth: 1,
-    borderColor: "#2b825b",
+    // borderColor: "#2b825b",
     borderRadius: 4,
     padding: 10,
   },
