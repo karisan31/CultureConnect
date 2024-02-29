@@ -124,6 +124,7 @@ export default function ChatCard({ chat }: Props): JSX.Element {
 const styles = StyleSheet.create({
   chatContainer: {
     marginVertical: 5,
+    backgroundColor: "transparent",
   },
   image: {
     height: 50,

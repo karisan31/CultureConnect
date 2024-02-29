@@ -95,7 +95,7 @@ export default function MessagesCard({
           ]}
         >
           <Text>{chat.content}</Text>
-          <Text style={styles.time}>
+          <Text style={[styles.userTime, myMessage ? null : styles.otherTime]}>
             {new Date(chat.created_at).toLocaleString(undefined, {
               hour: "numeric",
               minute: "numeric",
@@ -112,13 +112,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 8,
+    marginBottom: 10,
   },
   user: {
     fontSize: 12,
   },
   messageContainer: {
     padding: 10,
-    marginTop: 10,
+    marginVertical: 10,
     marginHorizontal: 10,
     borderRadius: 10,
     maxWidth: "80%",
@@ -139,16 +140,24 @@ const styles = StyleSheet.create({
   userMessageContainer: {
     backgroundColor: "#0096FF",
     alignSelf: "flex-end",
+    minWidth: 50,
   },
   otherMessageContainer: {
     backgroundColor: "#CBC3E3",
+    alignSelf: "flex-start",
+    minWidth: 50,
   },
   currentUser: {
     alignSelf: "flex-end",
   },
-  time: {
+  userTime: {
     fontSize: 12,
-    color: "black",
+    color: "#3b3b3b",
     alignSelf: "flex-end",
+  },
+  otherTime: {
+    fontSize: 12,
+    color: "#3b3b3b",
+    alignSelf: "flex-start",
   },
 });

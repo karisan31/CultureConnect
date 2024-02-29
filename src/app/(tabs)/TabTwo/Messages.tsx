@@ -62,7 +62,7 @@ export default function Messages(): JSX.Element {
     return <Spinner visible={true} />;
   }
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <Image
           source={require("../../../../assets/images/profileCover.png")}
@@ -70,7 +70,7 @@ export default function Messages(): JSX.Element {
         />
         <Text style={styles.title}>Messages</Text>
         <View style={styles.separator} />
-        <View>
+        <View style={styles.chatContainer}>
           {allChats.map((chat) => (
             <ChatCard key={chat.id} chat={chat} />
           ))}
@@ -110,5 +110,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
     alignItems: "center",
+    top: -140,
+    backgroundColor: "transparent",
   },
 });
