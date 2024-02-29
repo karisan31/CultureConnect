@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     width: "48%",
-    backgroundColor: "#ff4747",
+    backgroundColor: "#cc0000",
   },
   title: {
     bottom: 165,

@@ -132,23 +132,24 @@ export default function EditProfile() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <Stack.Screen options={{ title: "Edit Profile" }} />
+
       <View style={styles.container}>
-        <Text style={styles.title}>Edit Profile Details</Text>
-        <Text style={styles.label}>First Name</Text>
+        {/* <Text style={styles.title}>Edit Profile Details</Text> */}
+        <Text>First Name</Text>
         <TextInput
           style={styles.inputField}
           value={firstName}
           onChangeText={setFirstName}
         />
-        <Text style={styles.label}>Second Name</Text>
+        <Text>Second Name</Text>
         <TextInput
           style={styles.inputField}
           value={secondName}
           onChangeText={setSecondName}
         />
-        <Text style={styles.label}>Bio</Text>
+        <Text>Bio</Text>
         <TextInput
           style={styles.inputField}
           value={bio}
@@ -174,6 +175,20 @@ export default function EditProfile() {
           {isLoading ? <ActivityIndicator color="#fff" /> : "Update Profile"}
         </Button>
       </View>
+      <View style={styles.overlayImages}>
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageOne}
+        />
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageTwo}
+        />
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageThree}
+        />
+      </View>
     </ScrollView>
   );
 }
@@ -182,13 +197,22 @@ const styles = StyleSheet.create({
   label: {
     color: "gray",
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: -1000,
+  },
   container: {
     flex: 1,
     paddingTop: 20,
     padding: 20,
+    zIndex: 1,
+    backgroundColor: "transparent",
+    top: 100,
   },
   previewImage: {
     alignItems: "center",
+    zIndex: 1,
+    backgroundColor: "transparent",
   },
   title: {
     fontSize: 30,
@@ -205,12 +229,39 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     height: 50,
     borderWidth: 1,
-    borderColor: "#2b825b",
+    // borderColor: "#2b825b",
     borderRadius: 4,
     padding: 10,
   },
   button: {
     marginVertical: 15,
     alignItems: "center",
+  },
+  coverImageOne: {
+    width: 700,
+    height: 500,
+    top: -400,
+    left: 250,
+    borderRadius: 280,
+  },
+  coverImageTwo: {
+    width: 200,
+    height: 200,
+    top: -350,
+    right: 100,
+    transform: [{ scaleX: -1 }],
+    borderRadius: 100,
+  },
+  coverImageThree: {
+    width: 700,
+    height: 500,
+    left: -50,
+    transform: [{ scaleX: -1 }, { rotate: "90deg" }],
+    borderRadius: 1000,
+    top: -150,
+  },
+  overlayImages: {
+    top: 100,
+    position: "absolute",
   },
 });

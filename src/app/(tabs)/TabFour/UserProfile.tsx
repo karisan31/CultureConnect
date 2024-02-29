@@ -123,6 +123,16 @@ export default function ProfileDataScreen() {
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.overlayImages}>
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageTwo}
+        />
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageThree}
+        />
+      </View>
     </ScrollView>
   );
 }
@@ -133,6 +143,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: -250,
     marginBottom: -75,
+    zIndex: 1,
+    backgroundColor: "transparent",
   },
   refresh: {
     zIndex: 1,
@@ -177,6 +189,7 @@ const styles = StyleSheet.create({
     top: -140,
     fontWeight: "bold",
     alignSelf: "center",
+    textAlign: "center",
   },
   title: {
     fontSize: 20,
@@ -215,5 +228,25 @@ const styles = StyleSheet.create({
     width: "80%",
     bottom: 190,
     backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  coverImageTwo: {
+    width: 200,
+    height: 200,
+    top: -260,
+    right: 80,
+    transform: [{ scaleX: -1 }],
+    borderRadius: 100,
+  },
+  coverImageThree: {
+    width: 700,
+    height: 500,
+    left: -50,
+    transform: [{ scaleX: -1 }, { rotate: "90deg" }],
+    borderRadius: 1000,
+    top: -100,
+  },
+  overlayImages: {
+    top: 650,
+    position: "absolute",
   },
 });
