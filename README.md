@@ -14,7 +14,7 @@ This app was built using:
 
 - TypeScript
 - React Native
-- Supabase (Open source alternative to Firebase)
+- Supabase (Open-source alternative to Firebase)
 - MapView & Postcodes.io
   
 
@@ -25,7 +25,7 @@ Features:
 - Maps integration with interactive callout markers.
 - Ability to attend/cancel attendance to events.
 - A live messenger feature to talk to event hosts.
-- My events page where you can track events hosted and attending.
+- My events page where you can track events (hosted and attending).
 - Be able to host new events with calendar and time picker inputs.
 - Profile page with edit profile capabilities and a sign-out button.
 
