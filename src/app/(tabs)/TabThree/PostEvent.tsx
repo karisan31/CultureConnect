@@ -2,8 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { supabase } from "@/config/initSupabase";
-import { StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import {
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+  useColorScheme,
+} from "react-native";
+import { Button } from "react-native-paper";
 import {
   DatePickerInput,
   TimePickerModal,
@@ -11,7 +17,7 @@ import {
   registerTranslation,
 } from "react-native-paper-dates";
 registerTranslation("en-GB", enGB);
-import { Text, View, ScrollView } from "@/src/components/Themed";
+import { Text, View, ScrollView, TextInput } from "@/src/components/Themed";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
@@ -41,6 +47,7 @@ export default function PostEvent() {
   const [error, setError] = useState<string | null>(null);
   const [isError, setIsError] = useState<boolean>(false);
   const router = useRouter();
+  const theme = useColorScheme();
 
   const fetchData = async () => {
     const user = await supabase.auth.getUser();
@@ -182,7 +189,7 @@ export default function PostEvent() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Stack.Screen options={{ title: "Host Event" }} />
       <View style={[styles.container, { display: "flex" }]}>
         <Spinner visible={loading} />
@@ -196,30 +203,30 @@ export default function PostEvent() {
         <Text style={[styles.label, { color: "red" }]}>
           Title, location, date, and time are required.
         </Text>
-        <View>
+        <View style={styles.updatedContainer}>
           <TextInput
             placeholder="Event Title"
+            placeholderTextColor={theme === "dark" ? "#d3d3d3" : "#666666"}
             value={title}
             onChangeText={setTitle}
-            mode="outlined"
             style={styles.inputField}
           />
         </View>
-        <View>
+        <View style={styles.updatedContainer}>
           <TextInput
             placeholder="Address"
+            placeholderTextColor={theme === "dark" ? "#d3d3d3" : "#666666"}
             value={address}
             onChangeText={setAddress}
-            mode="outlined"
             style={styles.inputField}
           />
         </View>
-        <View>
+        <View style={styles.updatedContainer}>
           <TextInput
             placeholder="Postcode"
+            placeholderTextColor={theme === "dark" ? "#d3d3d3" : "#666666"}
             value={postcode}
             onChangeText={setPostcode}
-            mode="outlined"
             style={styles.inputField}
           />
           {postcodeError ? (
@@ -241,10 +248,11 @@ export default function PostEvent() {
             presentationStyle="pageSheet"
             locale="en-GB"
             placeholder="DD/MM/YYYY"
+            placeholderTextColor={theme === "dark" ? "#d3d3d3" : "#666666"}
             value={inputDate}
             onChange={onDateChange}
             inputMode="start"
-            style={{ width: 180 }}
+            style={{ width: 180, ...styles.updatedContainer }}
             mode="outlined"
           />
           <View
@@ -264,10 +272,8 @@ export default function PostEvent() {
             <Button
               onPress={() => setVisible(true)}
               uppercase={false}
-              mode="outlined"
+              mode="contained"
               style={{
-                backgroundColor: "white",
-                borderRadius: 5,
                 height: 40,
               }}
             >
@@ -282,54 +288,63 @@ export default function PostEvent() {
             />
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder="Max attendees"
-              value={maxAttendees}
-              onChangeText={setMaxAttendees}
-              mode="outlined"
-              style={styles.maxAttendeesInput}
-            />
-            <TextInput
-              placeholder="Description"
-              value={description}
-              onChangeText={setDescription}
-              multiline
-              mode="outlined"
-              style={styles.descriptionInput}
-            />
-          </View>
-
-          <View style={styles.container}>
-            {file ? (
-              <View style={[styles.imageContainer, { maxWidth: 150 }]}>
-                <Image source={{ uri: file }} style={styles.image} />
-              </View>
-            ) : (
-              <Text style={styles.errorText}>{error}</Text>
-            )}
-            <TouchableOpacity
-              style={[
-                styles.button,
-                { height: 50, width: 150, alignSelf: "flex-end" },
-              ]}
-              onPress={pickImage}
-            >
-              <Text style={styles.buttonText}>Choose Image</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.updatedContainer}>
+          <TextInput
+            placeholder="Max attendees"
+            placeholderTextColor={theme === "dark" ? "#d3d3d3" : "#666666"}
+            value={maxAttendees}
+            onChangeText={setMaxAttendees}
+            style={styles.maxAttendeesInput}
+          />
+        </View>
+        <View style={styles.updatedContainer}>
+          <TextInput
+            placeholder="Description"
+            placeholderTextColor={theme === "dark" ? "#d3d3d3" : "#666666"}
+            value={description}
+            onChangeText={setDescription}
+            multiline
+            style={styles.descriptionInput}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          {file ? (
+            <View style={[styles.imageContainer, { maxWidth: 150 }]}>
+              <Image source={{ uri: file }} style={styles.image} />
+            </View>
+          ) : (
+            <Text style={styles.errorText}>{error}</Text>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { height: 50, width: 150, alignSelf: "flex-end" },
+            ]}
+            onPress={pickImage}
+          >
+            <Text style={styles.buttonText}>Choose Image</Text>
+          </TouchableOpacity>
         </View>
         <Button
           children="Submit"
           mode="contained"
-          style={{ bottom: -5 }}
+          style={{ bottom: 45 }}
           onPress={handleSubmit}
         ></Button>
+      </View>
+      <View style={styles.overlayImages}>
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageOne}
+        />
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageTwo}
+        />
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageThree}
+        />
       </View>
     </ScrollView>
   );
@@ -344,6 +359,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     padding: 20,
     paddingHorizontal: 20,
+    backgroundColor: "transparent",
+    zIndex: 1,
   },
   header: {
     fontSize: 30,
@@ -358,6 +375,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 5,
   },
+  buttonContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent",
+  },
   inputContainer: {
     flexDirection: "column",
     justifyContent: "space-between",
@@ -365,13 +387,15 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: 10,
-    marginRight: 20,
     alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    position: "relative",
     backgroundColor: "#2b825b",
     padding: 12,
     borderRadius: 4,
-    position: "relative",
-    top: -50,
+    top: -45,
+    left: -100,
   },
   buttonText: {
     marginTop: 3,
@@ -392,8 +416,16 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   maxAttendeesInput: {
-    width: 150,
-    marginTop: -5,
+    flex: 1,
+    marginTop: 10,
+    marginBottom: 10,
+    height: 50,
+    width: 350,
+    overflow: "scroll",
+    borderWidth: 1,
+
+    borderRadius: 4,
+    padding: 5,
   },
   descriptionInput: {
     flex: 1,
@@ -406,5 +438,35 @@ const styles = StyleSheet.create({
 
     borderRadius: 4,
     padding: 5,
+  },
+  coverImageOne: {
+    width: 700,
+    height: 500,
+    top: -400,
+    left: 250,
+    borderRadius: 280,
+  },
+  coverImageTwo: {
+    width: 200,
+    height: 200,
+    top: -350,
+    right: 100,
+    transform: [{ scaleX: -1 }],
+    borderRadius: 100,
+  },
+  coverImageThree: {
+    width: 700,
+    height: 500,
+    left: -50,
+    transform: [{ scaleX: -1 }, { rotate: "90deg" }],
+    borderRadius: 1000,
+    top: -150,
+  },
+  overlayImages: {
+    top: 100,
+    position: "absolute",
+  },
+  updatedContainer: {
+    backgroundColor: "transparent",
   },
 });
