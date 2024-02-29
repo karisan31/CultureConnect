@@ -96,7 +96,10 @@ export default function MessagesCard({
         >
           <Text>{chat.content}</Text>
           <Text style={styles.time}>
-            {new Date(chat.created_at).toLocaleString()}
+            {new Date(chat.created_at).toLocaleString(undefined, {
+              hour: "numeric",
+              minute: "numeric",
+            })}
           </Text>
         </View>
       </View>

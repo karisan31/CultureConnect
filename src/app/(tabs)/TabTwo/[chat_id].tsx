@@ -134,6 +134,42 @@ export default function ChatRoom() {
       setMessageData(data);
     };
     fetchMessagesAndChat();
+
+    let previousChannel: any;
+
+    const setupRealtime = async () => {
+      if (chat_id) {
+        const newChannel = supabase.channel(`room:${chat_id}`);
+        newChannel.on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "messages" },
+          (payload) => {
+            const newMessage: Message = {
+              id: payload.new.id,
+              content: payload.new.content,
+              author_id: payload.new.author_id,
+              created_at: payload.new.created_at,
+            };
+            setMessageData((prevMessages) => [...prevMessages, newMessage]);
+          }
+        );
+        newChannel.subscribe();
+
+        if (previousChannel) {
+          previousChannel.unsubscribe();
+        }
+
+        previousChannel = newChannel;
+      }
+    };
+
+    setupRealtime();
+
+    return () => {
+      if (previousChannel) {
+        previousChannel.unsubscribe();
+      }
+    };
   }, [chat_id]);
 
   const sendMessage = async () => {
@@ -158,7 +194,7 @@ export default function ChatRoom() {
       if (!insertedMessage?.id) {
         throw new Error("Inserted message does not contain an ID.");
       }
-      setMessageData([...messageData, insertedMessage]);
+      //setMessageData([...messageData, insertedMessage]);
       setMessage("");
       console.log("Message added successfully:", insertedMessage);
     } catch (error: any) {
