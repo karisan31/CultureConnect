@@ -25,7 +25,7 @@ const RemoteImage = ({
         .download(path);
 
       if (error) {
-        console.log(error, "<---error");
+        console.log(error, "error");
       }
 
       if (data) {

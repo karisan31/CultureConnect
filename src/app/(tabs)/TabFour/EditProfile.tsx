@@ -79,8 +79,6 @@ export default function EditProfile() {
           throw new Error("No data to update");
         }
 
-        console.log("Updating profile with data:", updatedData);
-
         const { data, error } = await supabase
           .from("profiles")
           .update(updatedData)
@@ -89,8 +87,6 @@ export default function EditProfile() {
         if (error) {
           throw error;
         }
-
-        console.log("Profile updated successfully:", data);
         Alert.alert("Success", "Profile updated successfully");
       }
     } catch (error) {
@@ -136,7 +132,6 @@ export default function EditProfile() {
       <Stack.Screen options={{ title: "Edit Profile" }} />
 
       <View style={styles.container}>
-        {/* <Text style={styles.title}>Edit Profile Details</Text> */}
         <Text>First Name</Text>
         <TextInput
           style={styles.inputField}
