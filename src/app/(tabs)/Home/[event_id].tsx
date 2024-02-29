@@ -95,15 +95,6 @@ export default function EventDetails() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <>
-        <Spinner visible={true} />
-        <Stack.Screen options={{ title: "Event details" }} />
-      </>
-    );
-  }
-
   if (!eventData || !eventData[0]) {
     return <Text>This event is either full or has been deleted!</Text>;
   }
@@ -154,6 +145,15 @@ export default function EventDetails() {
       },
     ]);
     router.navigate(`/(tabs)/TabTwo/${chat.id}`);
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <Spinner visible={true} />
+        <Stack.Screen options={{ title: "Event details" }} />
+      </>
+    );
   }
 
   return (
@@ -249,13 +249,15 @@ export default function EventDetails() {
               >
                 View on Map
               </Button>
-              <Button
-                style={styles.buttons}
-                labelStyle={{ color: "black" }}
-                onPress={startChatWithHost}
-              >
-                Chat to Host{" "}
-              </Button>
+              {host.id !== currentUser ? (
+                <Button
+                  style={styles.buttons}
+                  labelStyle={{ color: "black" }}
+                  onPress={startChatWithHost}
+                >
+                  Chat to Host{" "}
+                </Button>
+              ) : null}
             </View>
           </View>
         </View>
