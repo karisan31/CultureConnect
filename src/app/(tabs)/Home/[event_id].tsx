@@ -25,26 +25,20 @@ export default function EventDetails() {
   useEffect(() => {
     setIsLoading(true);
     supabase.auth.getUser().then((user: any) => {
-      //get the user currently logged in, set currentUser to their user ID
       setCurrentUser(user.data.user?.id);
-      //fetch the data for this event
       fetchEventByID(event_id).then(({ data, error }) => {
         if (data) {
-          //if there is data not an error, set event data from the database
           setEventData(data);
-          //get the event host's info from the database
           supabase
             .from("profiles")
             .select("*")
             .eq("id", data[0].host_id)
             .then((hostData) => {
-              //set host as the host's profile info form db
               if (hostData.data !== null) {
                 setHost(hostData.data[0]);
               } else {
                 setHostError(true);
               }
-              //check if the current user is attending this event
               return supabase
                 .from("attendees")
                 .select("ticket_id")
@@ -52,7 +46,6 @@ export default function EventDetails() {
                 .eq("event_id", event_id);
             })
             .then((attending: any) => {
-              //if attending data comes through and the number of tickets is not 0, attending is true
               if (attending && attending.data.length > 0) {
                 setIsAttending(true);
                 setIsLoading(false);

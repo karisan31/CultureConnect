@@ -16,7 +16,6 @@ type AuthProps = {
 
 export const AuthContext = createContext<Partial<AuthProps>>({});
 
-// Custom hook to read the context values
 export function useAuth() {
   return React.useContext(AuthContext);
 }
@@ -27,7 +26,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [initialized, setInitialized] = useState<boolean>(false);
 
   useEffect(() => {
-    // Listen for changes to authentication state
     const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
       setUser(session ? session.user : null);
@@ -38,7 +36,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     };
   }, []);
 
-  // Log out the user
   const signOut = async () => {
     await supabase.auth.signOut();
   };

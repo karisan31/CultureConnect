@@ -125,7 +125,6 @@ export default function TabThreeScreen() {
           text: "Delete",
           onPress: async () => {
             try {
-              console.log("Deleting event with ID:", event_id);
               const { error } = await supabase
                 .from("events")
                 .delete()
@@ -134,7 +133,6 @@ export default function TabThreeScreen() {
               if (error) {
                 throw error;
               }
-              console.log("Event deleted successfully.");
               fetchUserEvents();
             } catch (error) {
               console.error("Error deleting event", error);

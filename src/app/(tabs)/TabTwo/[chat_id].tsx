@@ -194,9 +194,7 @@ export default function ChatRoom() {
       if (!insertedMessage?.id) {
         throw new Error("Inserted message does not contain an ID.");
       }
-      //setMessageData([...messageData, insertedMessage]);
       setMessage("");
-      console.log("Message added successfully:", insertedMessage);
     } catch (error: any) {
       console.error("Error adding message:", error.message);
     }

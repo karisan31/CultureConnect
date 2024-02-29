@@ -253,7 +253,6 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     height: 50,
     borderWidth: 1,
-    //borderColor: "#CCCCCC",
     borderRadius: 4,
     padding: 10,
   },
@@ -278,7 +277,6 @@ const styles = StyleSheet.create({
     top: 50,
     backgroundColor: "rgba(255,255,255,0)",
     padding: 20,
-    // position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
@@ -328,7 +326,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 350,
     height: 35,
-    marginBottom: 40
+    marginBottom: 40,
   },
 });
 
