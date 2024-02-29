@@ -110,7 +110,9 @@ export default function ChatCard({ chat }: Props): JSX.Element {
               bucket="avatars"
             />
             <Card.Content>
-              <Text variant="bodyMedium" style={styles.otherUserName}>{otherUser}</Text>
+              <Text variant="bodyMedium" style={styles.otherUserName}>
+                {otherUser}
+              </Text>
             </Card.Content>
           </Card.Content>
         </Card>
@@ -131,5 +133,5 @@ const styles = StyleSheet.create({
   otherUserName: {
     fontSize: 16,
     fontWeight: "bold",
-  }
+  },
 });
