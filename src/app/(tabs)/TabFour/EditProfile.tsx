@@ -132,8 +132,9 @@ export default function EditProfile() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <Stack.Screen options={{ title: "Edit Profile" }} />
+
       <View style={styles.container}>
         <Text style={styles.title}>Edit Profile Details</Text>
         <Text style={styles.label}>First Name</Text>
@@ -174,6 +175,20 @@ export default function EditProfile() {
           {isLoading ? <ActivityIndicator color="#fff" /> : "Update Profile"}
         </Button>
       </View>
+      <View style={styles.overlayImages}>
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageOne}
+        />
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageTwo}
+        />
+        <Image
+          source={require("../../../../assets/images/profileCover.png")}
+          style={styles.coverImageThree}
+        />
+      </View>
     </ScrollView>
   );
 }
@@ -182,13 +197,21 @@ const styles = StyleSheet.create({
   label: {
     color: "gray",
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: -1000,
+  },
   container: {
     flex: 1,
     paddingTop: 20,
     padding: 20,
+    zIndex: 1,
+    backgroundColor: "transparent",
   },
   previewImage: {
     alignItems: "center",
+    zIndex: 1,
+    backgroundColor: "transparent",
   },
   title: {
     fontSize: 30,
@@ -212,5 +235,32 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 15,
     alignItems: "center",
+  },
+  coverImageOne: {
+    width: 700,
+    height: 500,
+    top: -400,
+    left: 250,
+    borderRadius: 280,
+  },
+  coverImageTwo: {
+    width: 200,
+    height: 200,
+    top: -350,
+    right: 100,
+    transform: [{ scaleX: -1 }],
+    borderRadius: 100,
+  },
+  coverImageThree: {
+    width: 700,
+    height: 500,
+    left: -50,
+    transform: [{ scaleX: -1 }, { rotate: "90deg" }],
+    borderRadius: 1000,
+    top: -150,
+  },
+  overlayImages: {
+    top: 100,
+    position: "absolute",
   },
 });
