@@ -52,7 +52,7 @@ export default function PostEvent() {
   }, []);
 
   useEffect(() => {
-    setPostcodeError(false)
+    setPostcodeError(false);
     geoCode();
   }, [postcode]);
 
@@ -221,12 +221,12 @@ export default function PostEvent() {
             onChangeText={setPostcode}
             mode="outlined"
             style={styles.inputField}
-            />
-            {postcodeError ? (
-              <Text style={[styles.label, { color: "red" }]}>
-                Please enter a valid postcode
-              </Text>
-            ) : null}
+          />
+          {postcodeError ? (
+            <Text style={[styles.label, { color: "red" }]}>
+              Please enter a valid postcode
+            </Text>
+          ) : null}
         </View>
         <View
           style={{
@@ -253,6 +253,8 @@ export default function PostEvent() {
               flex: 1,
               alignItems: "center",
               backgroundColor: "transparent",
+              marginLeft: 115,
+              marginBottom: 10,
             }}
           >
             <Text style={{ marginBottom: 5, marginTop: 5 }}>
@@ -324,8 +326,8 @@ export default function PostEvent() {
         </View>
         <Button
           children="Submit"
-          mode="outlined"
-          style={{ backgroundColor: "white", bottom: -5 }}
+          mode="contained"
+          style={{ bottom: -5 }}
           onPress={handleSubmit}
         ></Button>
       </View>
@@ -353,7 +355,6 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     height: 50,
     borderWidth: 1,
-    borderColor: "#2b825b",
     borderRadius: 4,
     padding: 5,
   },
@@ -373,6 +374,7 @@ const styles = StyleSheet.create({
     top: -50,
   },
   buttonText: {
+    marginTop: 3,
     color: "#FFFFFF",
     fontSize: 16,
   },
