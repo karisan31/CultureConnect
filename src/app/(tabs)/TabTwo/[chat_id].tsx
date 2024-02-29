@@ -247,9 +247,9 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     flex: 1,
-    padding: 10,
-    marginTop: 10,
+    paddingHorizontal: 10,
     marginBottom: 10,
+    marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 10,
   },
