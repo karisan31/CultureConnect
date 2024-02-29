@@ -1,5 +1,7 @@
 # CultureConnect
 
+![CultureConnect in stylised font as the app logo](https://github.com/JoravarSinghPunia/CultureConnect-Application/blob/main/assets/images/CultureConnectLogo.png)
+
 Video presentation 
 
 CultureConnect is a community-focused hybrid application for iOS & Android. It provides a platform on which users can host culture-based events. 
