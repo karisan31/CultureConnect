@@ -87,6 +87,7 @@ export default function ProfileDataScreen() {
 
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
