@@ -1,14 +1,14 @@
 ![CultureConnect in stylised font as the app logo](https://github.com/karisan31/CultureConnect/blob/main/assets/images/CultureConnectLogo.png)
 
+## Project Summary
+
+CultureConnect is the creation of a community-focused hybrid application for iOS & Android. This application is a dynamic and responsive platform on which users can host and attend culture-based events. Designed with a user-friendly interface, seamless navigations and a commitment to deliver a good user experience, CultureConnect aims to foster a vibrant community where people can connect, learn, and celebrate together.
+
 ## Video Presentation
 
 [![CultureConnect App Overview](/assets/images/VideoThumbnail.png)](https://www.youtube.com/watch?v=XQNYzcSXUvs)
 
-Click the thumbnail above to watch the application presentation
-
-## Project Summary
-
-CultureConnect is the creation of a community-focused hybrid application for iOS & Android. This application is a dynamic and responsive platform on which users can host and attend culture-based events. Designed with a user-friendly interface, seamless navigations and a commitment to deliver a good user experience, CultureConnect aims to foster a vibrant community where people can connect, learn, and celebrate together.
+Click the thumbnail above to watch the video presentation for the CultureConnect Application.
 
 ## Technology Stack:
 
@@ -32,23 +32,21 @@ Features:
 - Be able to host new events with calendar and time picker inputs.
 - Profile page with edit profile capabilities and a sign-out button.
 
-## If you wish to explore this application yourself:
+## Installation
 
-1. Clone the Repository
+1. Clone the repository"
 
-In the terminal on your device, cd into the directory where you wish to keep this repository, then,
+`git clone https://github.com/karisan31/CultureConnect.git`
 
-`git clone https://github.com/JoravarSinghPunia/CultureConnect-Application.git`
+2. Navigate to the directory:
 
-Or, if you have already forked this repo, copy the HTTPS link from the green 'Code' dropdown and replace the URL.
+`cd CultureConnect`
 
-2. Install the necessary dependencies
-
-Before working with the repository, you're going to need to install npm to your newly downloaded repo by typing the following command into your terminal while inside the git repository
+3. Install the necessary dependencies
 
 `npm install`
 
-3. Access the database
+4. Access the database
 
 Create a folder named .env and insert the following:-
 
@@ -60,15 +58,15 @@ See [this](https://docs.expo.dev/guides/using-supabase/) for more information.
 
 NOTE: Make sure to add .env to your git ignore as env files usually contain sensitive information and should not be put in version control\*
 
-4. Set up your device
+## Usage
+
+In order to use the CultureConnect, you will need to either set up an emulator or download an app.
 
 iOS emulator: Follow this [link](https://apps.apple.com/us/app/xcode/id497799835?mt=12) to install Xcode
 
 Android emulator: Follow this [link](https://developer.android.com/studio) to install Android Studio on Linux, Ubuntu or Windows
 
 Expo Go app: Install the 'Expo Go' app on any mobile device to view directly.
-
-5. Run app
 
 Once you have cloned the repository and installed all of the necessary dependencies, you will need to deploy your app using the following command
 
