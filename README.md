@@ -1,5 +1,11 @@
 ![CultureConnect in stylised font as the app logo](https://github.com/karisan31/CultureConnect/blob/main/assets/images/CultureConnectLogo.png)
 
+[![CultureConnect App Overview](/assets/images/VideoThumbnail.png)](https://www.youtube.com/watch?v=XQNYzcSXUvs)
+
+## Project Summary
+
+CultureConnect is the creation of a community-focused hybrid application for iOS & Android. This application is a dynamic and responsive platform on which users can host and attend culture-based events. Designed with a user-friendly interface, seamless navigations and a commitment to deliver a good user experience, CultureConnect aims to foster a vibrant community where people can connect, learn, and celebrate together.
+
 <p align="center">
   <a href="https://www.youtube.com/watch?v=XQNYzcSXUvs">
     <img src="/assets/images/VideoThumbnail.png" alt="Application Presentation">
@@ -7,8 +13,6 @@
 </p>
 
 Click the thumbnail above to watch the application presentation
-
-CultureConnect is a community-focused hybrid application for iOS & Android. It provides a platform on which users can host culture-based events.
 
 ## Technology Stack:
 
