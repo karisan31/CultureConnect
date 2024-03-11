@@ -1,7 +1,7 @@
 ![CultureConnect in stylised font as the app logo](https://github.com/karisan31/CultureConnect/blob/main/assets/images/CultureConnectLogo.png)
 
 <p align="center">
-  <a href="https://youtu.be/syxOqc9XhZ4">
+  <a href="https://www.youtube.com/watch?v=XQNYzcSXUvs">
     <img src="https://img.youtube.com/vi/syxOqc9XhZ4/0.jpg" alt="Application Presentation">
   </a>
 </p>
