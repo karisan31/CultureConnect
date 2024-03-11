@@ -36,15 +36,21 @@ Features:
 
 1. Clone the repository"
 
-`git clone https://github.com/karisan31/CultureConnect.git`
+```
+git clone https://github.com/karisan31/CultureConnect.git
+```
 
 2. Navigate to the directory:
 
-`cd CultureConnect`
+```
+cd CultureConnect
+```
 
 3. Install the necessary dependencies
 
-`npm install`
+```
+npm install
+```
 
 4. Access the database
 
@@ -70,6 +76,8 @@ Expo Go app: Install the 'Expo Go' app on any mobile device to view directly.
 
 Once you have cloned the repository and installed all of the necessary dependencies, you will need to deploy your app using the following command
 
-`npm start`
+```
+npm start
+```
 
 Follow the terminal directions to view the app on an emulator of your choice, or scan the QR code on your mobile to open the Expo Go app.
